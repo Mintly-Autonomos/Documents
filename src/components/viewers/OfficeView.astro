@@ -1,13 +1,19 @@
 ---
-interface Props { absoluteSrc: string, src: string, name: string }
-const { absoluteSrc, src, name } = Astro.props
+interface Props { absoluteSrc: string, src: string, name: string, html?: string }
+const { absoluteSrc, src, name, html } = Astro.props
 const viewer = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(absoluteSrc)}`
 ---
-<div class="card">
-  <p style="font-weight:600;">📊 {name}</p>
-  <p style="color:var(--muted-foreground);font-size:14px;">Documento Office. Abra no visualizador online ou baixe.</p>
-  <div style="display:flex;gap:8px;">
-    <a class="btn" href={viewer} target="_blank" rel="noopener">👁️ Abrir no visualizador</a>
-    <a class="btn btn--ghost" href={src} download>⬇️ Baixar</a>
+<div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+    <a class="btn btn--ghost" href={src} download>⬇️ Baixar {name}</a>
+    <a class="btn btn--ghost" href={viewer} target="_blank" rel="noopener">👁️ Abrir no viewer da Microsoft</a>
   </div>
+  {html
+    ? <div class="office-inline" data-pagefind-body set:html={html} />
+    : <div class="card"><p style="font-weight:600;">📊 {name}</p><p style="color:var(--muted-foreground);font-size:14px;">Pré-visualização inline não disponível para este formato — use baixar ou o viewer.</p></div>}
 </div>
+<style>
+  .office-inline :global(table) { border-collapse: collapse; width: 100%; }
+  .office-inline :global(td), .office-inline :global(th) { border: 1px solid var(--border); padding: 6px 10px; }
+  .office-inline :global(img) { max-width: 100%; }
+</style>

@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content'
 import { fileURLToPath } from 'node:url'
+import { join } from 'node:path'
+import { extractPdfText, extractDocxHtml, extractXlsxHtml } from '../lib/extract'
 import { buildContentTree, type FileNode, type FolderNode, type TreeNode } from '../lib/content-tree'
 import DocLayout from '../layouts/DocLayout.astro'
 import FolderIndex from '../components/viewers/FolderIndex.astro'
@@ -44,6 +46,17 @@ const file = node.type === 'file' ? (node as FileNode) : null
 const folderOfFile = file ? file.path.split('/').slice(0, -1).join('/') : ''
 const fileUrl = file ? `${base}/files/${file.path}` : ''
 const fileAbsUrl = file ? `${site}${base}/files/${file.path}` : ''
+
+const docsDir = fileURLToPath(new URL('../../docs', import.meta.url))
+let pdfText: string | undefined
+let officeHtml: string | undefined
+if (file) {
+  const abs = join(docsDir, file.path)
+  const ext = file.name.toLowerCase().split('.').pop()
+  if (file.kind === 'pdf') pdfText = await extractPdfText(abs).catch(() => undefined)
+  else if (ext === 'docx') officeHtml = await extractDocxHtml(abs).catch(() => undefined)
+  else if (ext === 'xlsx') officeHtml = await extractXlsxHtml(abs).catch(() => undefined)
+}
 ---
 <DocLayout title={title} tree={tree} current={current}>
   {node.type === 'folder' && <FolderIndex node={node as FolderNode} repo={REPO} />}
@@ -53,9 +66,9 @@ const fileAbsUrl = file ? `${site}${base}/files/${file.path}` : ''
       <FileActions repo={REPO} filePath={file.path} folderPath={folderOfFile} />
       {file.kind === 'markdown' && entry && <MarkdownView entry={entry} />}
       {file.kind === 'markdown' && !entry && <p>Não foi possível carregar este Markdown.</p>}
-      {file.kind === 'pdf' && <PdfView src={fileUrl} name={file.name} />}
+      {file.kind === 'pdf' && <PdfView src={fileUrl} name={file.name} text={pdfText} />}
       {file.kind === 'image' && <ImageView src={fileUrl} name={file.name} />}
-      {file.kind === 'office' && <OfficeView absoluteSrc={fileAbsUrl} src={fileUrl} name={file.name} />}
+      {file.kind === 'office' && <OfficeView absoluteSrc={fileAbsUrl} src={fileUrl} name={file.name} html={officeHtml} />}
       {file.kind === 'other' && <OtherView src={fileUrl} name={file.name} />}
     </>
   )}

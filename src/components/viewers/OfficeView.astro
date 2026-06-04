@@ -1,0 +1,13 @@
+---
+interface Props { absoluteSrc: string, src: string, name: string }
+const { absoluteSrc, src, name } = Astro.props
+const viewer = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(absoluteSrc)}`
+---
+<div class="card">
+  <p style="font-weight:600;">📊 {name}</p>
+  <p style="color:var(--muted-foreground);font-size:14px;">Documento Office. Abra no visualizador online ou baixe.</p>
+  <div style="display:flex;gap:8px;">
+    <a class="btn" href={viewer} target="_blank" rel="noopener">👁️ Abrir no visualizador</a>
+    <a class="btn btn--ghost" href={src} download>⬇️ Baixar</a>
+  </div>
+</div>

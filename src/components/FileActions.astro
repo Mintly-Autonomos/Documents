@@ -1,0 +1,11 @@
+---
+import { ghEdit, ghNew, ghView, ghHistory } from '../lib/github-links'
+interface Props { repo: string, filePath: string, folderPath: string }
+const { repo, filePath, folderPath } = Astro.props
+---
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 20px;">
+  <a class="btn" href={ghEdit(repo, filePath)} target="_blank" rel="noopener">✏️ Editar</a>
+  <a class="btn btn--ghost" href={ghNew(repo, folderPath)} target="_blank" rel="noopener">➕ Novo</a>
+  <a class="btn btn--ghost" href={ghView(repo, filePath)} target="_blank" rel="noopener">🔗 Ver no GitHub</a>
+  <a class="btn btn--ghost" href={ghHistory(repo, filePath)} target="_blank" rel="noopener">🕘 Histórico</a>
+</div>

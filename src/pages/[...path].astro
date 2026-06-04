@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content'
+import { fileURLToPath } from 'node:url'
+import { buildContentTree, type FileNode, type FolderNode, type TreeNode } from '../lib/content-tree'
+import DocLayout from '../layouts/DocLayout.astro'
+import FolderIndex from '../components/viewers/FolderIndex.astro'
+import MarkdownView from '../components/viewers/MarkdownView.astro'
+import PdfView from '../components/viewers/PdfView.astro'
+import ImageView from '../components/viewers/ImageView.astro'
+import OfficeView from '../components/viewers/OfficeView.astro'
+import OtherView from '../components/viewers/OtherView.astro'
+import FileActions from '../components/FileActions.astro'
+
+const REPO = 'Mintly-Autonomos/Documents'
+
+export async function getStaticPaths () {
+  const docsDir = fileURLToPath(new URL('../../docs', import.meta.url))
+  const root = buildContentTree(docsDir)
+  const mdEntries = await getCollection('docs')
+  // O id da glob loader pode vir slugificado/minúsculo; casamos por path normalizado.
+  const mdById = new Map(mdEntries.map((e) => [e.id.toLowerCase(), e]))
+
+  const paths: any[] = []
+  const walk = (node: TreeNode) => {
+    if (node.type === 'folder') {
+      paths.push({ params: { path: node.path || undefined }, props: { node, tree: root } })
+      node.children.forEach(walk)
+    } else {
+      const idGuess = node.path.replace(/\.(md|markdown)$/i, '').toLowerCase()
+      paths.push({ params: { path: node.path }, props: { node, tree: root, entry: mdById.get(idGuess) ?? null } })
+    }
+  }
+  walk(root)
+  return paths
+}
+
+const { node, tree, entry } = Astro.props as { node: TreeNode, tree: FolderNode, entry?: any }
+const base = import.meta.env.BASE_URL
+const site = Astro.site?.toString().replace(/\/$/, '') ?? ''
+const current = node.path
+const title = (node.name || 'Documentos') + ' — Mintly Docs'
+
+const file = node.type === 'file' ? (node as FileNode) : null
+const folderOfFile = file ? file.path.split('/').slice(0, -1).join('/') : ''
+const fileUrl = file ? `${base}/files/${file.path}` : ''
+const fileAbsUrl = file ? `${site}${base}/files/${file.path}` : ''
+---
+<DocLayout title={title} tree={tree} current={current}>
+  {node.type === 'folder' && <FolderIndex node={node as FolderNode} repo={REPO} />}
+  {file && (
+    <>
+      <h1 style="margin-top:0;">{file.name}</h1>
+      <FileActions repo={REPO} filePath={file.path} folderPath={folderOfFile} />
+      {file.kind === 'markdown' && entry && <MarkdownView entry={entry} />}
+      {file.kind === 'markdown' && !entry && <p>Não foi possível carregar este Markdown.</p>}
+      {file.kind === 'pdf' && <PdfView src={fileUrl} name={file.name} />}
+      {file.kind === 'image' && <ImageView src={fileUrl} name={file.name} />}
+      {file.kind === 'office' && <OfficeView absoluteSrc={fileAbsUrl} src={fileUrl} name={file.name} />}
+      {file.kind === 'other' && <OtherView src={fileUrl} name={file.name} />}
+    </>
+  )}
+</DocLayout>

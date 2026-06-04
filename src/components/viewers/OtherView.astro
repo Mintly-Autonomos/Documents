@@ -1,0 +1,8 @@
+---
+interface Props { src: string, name: string }
+const { src, name } = Astro.props
+---
+<div class="card">
+  <p style="font-weight:600;">📎 {name}</p>
+  <a class="btn" href={src} download>⬇️ Baixar arquivo</a>
+</div>

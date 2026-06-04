@@ -1,0 +1,8 @@
+---
+interface Props { src: string, name: string }
+const { src, name } = Astro.props
+---
+<div>
+  <iframe src={src} title={name} style="width:100%;height:80vh;border:1px solid var(--border);border-radius:var(--radius);"></iframe>
+  <p><a class="btn btn--ghost" href={src} download>⬇️ Baixar {name}</a></p>
+</div>

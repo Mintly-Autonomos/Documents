@@ -1,0 +1,22 @@
+---
+import type { FolderNode } from '../../lib/content-tree'
+import { ghNew } from '../../lib/github-links'
+import { folderIcon, fileIcon } from '../../lib/icons'
+interface Props { node: FolderNode, repo: string }
+const { node, repo } = Astro.props
+const base = import.meta.env.BASE_URL
+---
+<div style="display:flex;justify-content:space-between;align-items:center;">
+  <h1 style="margin:0;">{node.name || 'Documentos'}</h1>
+  <a class="btn" href={ghNew(repo, node.path)} target="_blank" rel="noopener">➕ Novo documento</a>
+</div>
+<p style="color:var(--muted-foreground);">{node.children.length} item(ns)</p>
+<div style="display:grid;gap:10px;margin-top:8px;">
+  {node.children.map((c) => (
+    <a class="card" href={`${base}/${c.path}`} style="display:flex;align-items:center;gap:10px;color:var(--foreground);">
+      <span style="font-size:20px;">{c.type === 'folder' ? folderIcon : fileIcon(c.kind)}</span>
+      <span>{c.name}{c.type === 'folder' ? '/' : ''}</span>
+    </a>
+  ))}
+  {node.children.length === 0 && <p style="color:var(--muted-foreground);">Pasta vazia.</p>}
+</div>

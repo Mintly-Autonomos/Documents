@@ -1,0 +1,42 @@
+---
+import { fileURLToPath } from 'node:url'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { buildContentTree } from '../lib/content-tree'
+import { flattenFiles } from '../lib/search-index'
+import { fileIcon } from '../lib/icons'
+const DOCS_DIR = fileURLToPath(new URL('../../docs', import.meta.url))
+const files = flattenFiles(buildContentTree(DOCS_DIR))
+const base = import.meta.env.BASE_URL
+---
+<BaseLayout title="Buscar — Mintly Docs">
+  <main style="max-width:840px;margin:0 auto;padding:24px;">
+    <h1>Buscar</h1>
+
+    <h2 style="font-size:16px;color:var(--muted-foreground);">Busca no conteúdo (full-text)</h2>
+    <div id="pagefind"></div>
+
+    <h2 style="font-size:16px;color:var(--muted-foreground);margin-top:28px;">Todos os arquivos</h2>
+    <input id="filtro" placeholder="Filtrar por nome ou caminho…" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--card);color:var(--foreground);" />
+    <ul id="lista" style="list-style:none;padding:0;margin:12px 0;line-height:2;">
+      {files.map((f) => (
+        <li data-path={f.path.toLowerCase()}>
+          <a href={`${base}/${f.path}`}>{fileIcon(f.kind as any)} {f.path}</a>
+        </li>
+      ))}
+    </ul>
+  </main>
+
+  <link href={`${base}/pagefind/pagefind-ui.css`} rel="stylesheet" />
+  <script is:inline src={`${base}/pagefind/pagefind-ui.js`}></script>
+  <script is:inline define:vars={{ base }}>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.PagefindUI) new window.PagefindUI({ element: '#pagefind', showSubResults: true })
+      const input = document.getElementById('filtro')
+      const items = [...document.querySelectorAll('#lista li')]
+      input?.addEventListener('input', () => {
+        const q = input.value.toLowerCase()
+        items.forEach((li) => { li.style.display = li.dataset.path.includes(q) ? '' : 'none' })
+      })
+    })
+  </script>
+</BaseLayout>

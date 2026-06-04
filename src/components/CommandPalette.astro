@@ -1,0 +1,40 @@
+---
+const base = import.meta.env.BASE_URL
+---
+<dialog id="cmdk">
+  <div id="cmdk-search"></div>
+</dialog>
+<link href={`${base}/pagefind/pagefind-ui.css`} rel="stylesheet" />
+<script is:inline src={`${base}/pagefind/pagefind-ui.js`}></script>
+<script is:inline>
+  window.addEventListener('DOMContentLoaded', () => {
+    const dialog = document.getElementById('cmdk')
+    if (!dialog) return
+    let inited = false
+    function openPalette () {
+      if (!inited && window.PagefindUI) {
+        new window.PagefindUI({ element: '#cmdk-search', showSubResults: true })
+        inited = true
+      }
+      if (!dialog.open) dialog.showModal()
+      setTimeout(() => dialog.querySelector('input')?.focus(), 50)
+    }
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openPalette() }
+      if (e.key === 'Escape' && dialog.open) dialog.close()
+    })
+    // clicar fora (no backdrop) fecha
+    dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close() })
+  })
+</script>
+<style>
+  #cmdk {
+    border: none; border-radius: 14px; padding: 16px;
+    width: min(640px, 92vw); max-height: 80vh;
+    background: var(--card); color: var(--foreground);
+    box-shadow: 0 20px 60px rgba(0,0,0,.35);
+  }
+</style>
+<style is:global>
+  #cmdk::backdrop { background: rgba(0,0,0,.45); }
+</style>

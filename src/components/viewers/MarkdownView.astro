@@ -1,14 +1,30 @@
 ---
 import type { CollectionEntry } from 'astro:content'
 import { render } from 'astro:content'
+import { readingTimeMin, tocFromHeadings } from '../../lib/reading'
 interface Props { entry: CollectionEntry<'docs'> }
 const { entry } = Astro.props
-const { Content } = await render(entry)
+const { Content, headings } = await render(entry)
+const minutes = readingTimeMin(entry.body ?? '')
+const toc = tocFromHeadings(headings)
 ---
+<p style="color:var(--muted-foreground);font-size:13px;">⏱️ {minutes} min de leitura</p>
+{toc.length > 0 && (
+  <details class="toc" open>
+    <summary style="cursor:pointer;color:var(--muted-foreground);">Nesta página</summary>
+    <ul>
+      {toc.map((h) => (
+        <li style={`margin-left:${(h.depth - 2) * 14}px;`}><a href={`#${h.slug}`}>{h.text}</a></li>
+      ))}
+    </ul>
+  </details>
+)}
 <article class="prose" data-pagefind-body>
   <Content />
 </article>
 <style>
+  .toc { border:1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; margin: 8px 0 20px; background: var(--card); }
+  .toc ul { list-style:none; padding:0; margin:8px 0 0; line-height:1.9; }
   .prose { line-height: 1.7; }
   .prose :global(h1) { margin-top: 0; }
   .prose :global(pre) { background: var(--muted); padding: 14px; border-radius: var(--radius); overflow:auto; }

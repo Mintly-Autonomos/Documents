@@ -11,6 +11,7 @@ import PdfView from '../components/viewers/PdfView.astro'
 import ImageView from '../components/viewers/ImageView.astro'
 import OfficeView from '../components/viewers/OfficeView.astro'
 import OtherView from '../components/viewers/OtherView.astro'
+import Giscus from '../components/Giscus.astro'
 import FileActions from '../components/FileActions.astro'
 import { lastCommit } from '../lib/git-meta'
 
@@ -77,6 +78,7 @@ const meta = file ? lastCommit(fileURLToPath(new URL('../../', import.meta.url))
       {file.kind === 'image' && <ImageView src={fileUrl} name={file.name} />}
       {file.kind === 'office' && <OfficeView absoluteSrc={fileAbsUrl} src={fileUrl} name={file.name} html={officeHtml} />}
       {file.kind === 'other' && <OtherView src={fileUrl} name={file.name} />}
+      <Giscus />
     </>
   )}
 </DocLayout>

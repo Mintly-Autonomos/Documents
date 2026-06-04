@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="420" font-family="Inter, sans-serif">
+  <rect width="760" height="420" fill="#F8FAFC"/>
+  <text x="380" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#0F5D75">Stack do Mintly</text>
+  <g>
+    <rect x="60"  y="90"  width="180" height="64" rx="14" fill="#DFF8EB" stroke="#1ED760"/>
+    <text x="150" y="128" text-anchor="middle" font-size="16" fill="#1F2937">MintlyWeb (web)</text>
+    <rect x="290" y="90"  width="180" height="64" rx="14" fill="#DFF8EB" stroke="#1ED760"/>
+    <text x="380" y="128" text-anchor="middle" font-size="16" fill="#1F2937">MintlyApi (api)</text>
+    <rect x="520" y="90"  width="180" height="64" rx="14" fill="#E8F3F8" stroke="#0F5D75"/>
+    <text x="610" y="128" text-anchor="middle" font-size="16" fill="#1F2937">MongoDB</text>
+    <rect x="290" y="220" width="180" height="64" rx="14" fill="#fff" stroke="#94a3b8"/>
+    <text x="380" y="258" text-anchor="middle" font-size="16" fill="#1F2937">MintlyLib (lib)</text>
+    <rect x="520" y="220" width="180" height="64" rx="14" fill="#fff" stroke="#94a3b8"/>
+    <text x="610" y="258" text-anchor="middle" font-size="16" fill="#1F2937">Workers (ingestão)</text>
+  </g>
+  <g stroke="#64748b" stroke-width="2" fill="none">
+    <defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6Z" fill="#64748b"/></marker></defs>
+    <path d="M240,122 L290,122" marker-end="url(#a)"/>
+    <path d="M470,122 L520,122" marker-end="url(#a)"/>
+    <path d="M380,220 L380,154" marker-end="url(#a)"/>
+    <path d="M610,220 L610,154" marker-end="url(#a)"/>
+  </g>
+</svg>

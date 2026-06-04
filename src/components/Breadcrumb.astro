@@ -1,0 +1,13 @@
+---
+import type { TreeNode } from '../lib/content-tree'
+interface Props { path: string }
+const { path } = Astro.props
+const base = import.meta.env.BASE_URL
+const parts = path ? path.split('/') : []
+let acc = ''
+const crumbs = parts.map((p) => { acc = acc ? `${acc}/${p}` : p; return { label: p, href: `${base}/${acc}` } })
+---
+<nav style="font-size:13px;color:var(--muted-foreground);margin-bottom:16px;">
+  <a href={base}>Início</a>
+  {crumbs.map((c) => (<span> / <a href={c.href}>{c.label}</a></span>))}
+</nav>

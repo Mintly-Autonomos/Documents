@@ -12,6 +12,7 @@ import ImageView from '../components/viewers/ImageView.astro'
 import OfficeView from '../components/viewers/OfficeView.astro'
 import OtherView from '../components/viewers/OtherView.astro'
 import FileActions from '../components/FileActions.astro'
+import { lastCommit } from '../lib/git-meta'
 
 const REPO = 'Mintly-Autonomos/Documents'
 
@@ -57,6 +58,7 @@ if (file) {
   else if (ext === 'docx') officeHtml = await extractDocxHtml(abs).catch(() => undefined)
   else if (ext === 'xlsx') officeHtml = await extractXlsxHtml(abs).catch(() => undefined)
 }
+const meta = file ? lastCommit(fileURLToPath(new URL('../../', import.meta.url)), `docs/${file.path}`) : null
 ---
 <DocLayout title={title} tree={tree} current={current}>
   {node.type === 'folder' && <FolderIndex node={node as FolderNode} repo={REPO} />}
@@ -64,6 +66,11 @@ if (file) {
     <>
       <h1 style="margin-top:0;">{file.name}</h1>
       <FileActions repo={REPO} filePath={file.path} folderPath={folderOfFile} />
+      {meta && (
+        <p style="color:var(--muted-foreground);font-size:13px;margin:-8px 0 16px;">
+          Atualizado em {new Date(meta.date).toLocaleDateString('pt-BR')} por {meta.author}
+        </p>
+      )}
       {file.kind === 'markdown' && entry && <MarkdownView entry={entry} />}
       {file.kind === 'markdown' && !entry && <p>Não foi possível carregar este Markdown.</p>}
       {file.kind === 'pdf' && <PdfView src={fileUrl} name={file.name} text={pdfText} />}

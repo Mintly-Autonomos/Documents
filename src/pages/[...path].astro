@@ -12,7 +12,6 @@ import OtherView from '../components/viewers/OtherView.astro'
 import FileActions from '../components/FileActions.astro'
 
 const REPO = 'Mintly-Autonomos/Documents'
-const DOCS_DIR = fileURLToPath(new URL('../../docs', import.meta.url))
 
 export async function getStaticPaths () {
   const docsDir = fileURLToPath(new URL('../../docs', import.meta.url))

@@ -33,3 +33,12 @@ const toc = tocFromHeadings(headings)
   .prose :global(table) { border-collapse: collapse; }
   .prose :global(td), .prose :global(th) { border: 1px solid var(--border); padding: 6px 10px; }
 </style>
+<script>
+  // Renderiza os <pre class="mermaid"> client-side, carregando mermaid sob demanda.
+  const blocks = document.querySelectorAll('pre.mermaid')
+  if (blocks.length > 0) {
+    const { default: mermaid } = await import('mermaid')
+    mermaid.initialize({ startOnLoad: false, theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default' })
+    await mermaid.run({ nodes: blocks })
+  }
+</script>

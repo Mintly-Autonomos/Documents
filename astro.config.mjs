@@ -24,7 +24,7 @@ export default defineConfig({
   },
   vite: {
     ssr: {
-      external: ['pdf-parse', 'mammoth', 'xlsx'],
+      external: ['pdf-parse', 'mammoth', 'xlsx', 'sanitize-html'],
     },
   },
 })

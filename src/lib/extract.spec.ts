@@ -26,6 +26,27 @@ describe('extract', () => {
     expect(html).toContain('v2')
   })
 
+  it('docx -> sanitiza link javascript: (XSS)', async () => {
+    const { Document, Packer, Paragraph, TextRun, ExternalHyperlink } = await import('docx')
+    const doc = new Document({ sections: [{ children: [new Paragraph({ children: [
+      new ExternalHyperlink({ children: [new TextRun('clique')], link: 'javascript:alert(1)' }),
+    ] })] }] })
+    const p = join(dir, 'xss.docx'); writeFileSync(p, await Packer.toBuffer(doc))
+    const html = await extractDocxHtml(p)
+    expect(html).not.toContain('javascript:')
+  })
+
+  it('xlsx -> sanitiza breakout de atributo (XSS)', async () => {
+    const ExcelJS = (await import('exceljs')).default
+    const wb = new ExcelJS.Workbook(); const ws = wb.addWorksheet('S')
+    ws.addRow(['a"><img src=x onerror=alert(1)>'])
+    const p = join(dir, 'xss.xlsx'); writeFileSync(p, Buffer.from(await wb.xlsx.writeBuffer()))
+    const html = await extractXlsxHtml(p)
+    // o breakout de atributo do SheetJS viraria um <img onerror> ao vivo; sanitizado,
+    // nenhum elemento <img> é criado (o payload sobra só como texto escapado inerte).
+    expect(html).not.toMatch(/<img/i)
+  })
+
   it('pdf -> texto contendo o conteudo', async () => {
     const { PDFDocument, StandardFonts } = await import('pdf-lib')
     const pdf = await PDFDocument.create(); const font = await pdf.embedFont(StandardFonts.Helvetica)

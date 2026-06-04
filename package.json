@@ -16,9 +16,11 @@
     "mammoth": "^1.12.0",
     "mermaid": "^11.15.0",
     "pdf-parse": "^2.4.5",
+    "sanitize-html": "^2.17.4",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@types/sanitize-html": "^2.16.1",
     "docx": "^9.7.1",
     "exceljs": "^4.4.0",
     "linkinator": "^7.6.1",
@@ -27,6 +29,7 @@
     "pptxgenjs": "^4.0.1",
     "typescript": "^5.6.0",
     "unist-util-visit": "^5.1.0",
-    "vitest": "^3.0.0"
+    "vitest": "^3.0.0",
+    "wait-on": "^9.0.10"
   }
 }

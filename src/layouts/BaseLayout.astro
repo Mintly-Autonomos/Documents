@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css'
 import ThemeToggle from '../components/ThemeToggle.astro'
+import CommandPalette from '../components/CommandPalette.astro'
 interface Props { title: string }
 const { title } = Astro.props
 const base = import.meta.env.BASE_URL
@@ -16,10 +17,11 @@ const base = import.meta.env.BASE_URL
     <header style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--background);z-index:10;">
       <a href={base} style="font-weight:800;font-size:18px;color:var(--foreground);">📗 Mintly · Documentos</a>
       <div style="display:flex;gap:10px;align-items:center;">
-        <a class="btn btn--ghost" href={`${base}/buscar`}>🔎 Buscar</a>
+        <a class="btn btn--ghost" href={`${base}/buscar`}>🔎 Buscar ⌘K</a>
         <ThemeToggle />
       </div>
     </header>
     <slot />
+    <CommandPalette />
   </body>
 </html>

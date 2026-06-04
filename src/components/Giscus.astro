@@ -1,0 +1,24 @@
+---
+// Discussions habilitado e IDs preenchidos. ÚNICO passo manual restante:
+// instalar o app https://github.com/apps/giscus no repo Mintly-Autonomos/Documents.
+const REPO = 'Mintly-Autonomos/Documents'
+const REPO_ID = 'R_kgDOSwk7RA'
+const CATEGORY = 'Announcements'
+const CATEGORY_ID = 'DIC_kwDOSwk7RM4C-eWJ'
+const configured = !REPO_ID.startsWith('COLE_')
+---
+{configured ? (
+  <section style="margin-top:40px;border-top:1px solid var(--border);padding-top:20px;">
+    <script src="https://giscus.app/client.js"
+      data-repo={REPO}
+      data-repo-id={REPO_ID}
+      data-category={CATEGORY}
+      data-category-id={CATEGORY_ID}
+      data-mapping="pathname"
+      data-reactions-enabled="1"
+      data-theme="preferred_color_scheme"
+      data-lang="pt"
+      crossorigin="anonymous"
+      async></script>
+  </section>
+) : null}

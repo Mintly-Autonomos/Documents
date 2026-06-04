@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import './tokens.css';
+
+* { box-sizing: border-box; }
+html { color-scheme: light dark; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--background);
+  color: var(--foreground);
+}
+a { color: var(--ocean); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: var(--radius);
+  background: var(--primary); color: var(--primary-foreground);
+  font-size: 14px; font-weight: 600; border: none; cursor: pointer;
+}
+.btn--ghost { background: var(--muted); color: var(--foreground); border: 1px solid var(--border); }
+.card {
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--card); padding: 14px 16px;
+}

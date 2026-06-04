@@ -1,0 +1,11 @@
+<button id="theme-toggle" class="btn btn--ghost" aria-label="Alternar tema">🌗</button>
+<script>
+  const KEY = 'mintly-theme'
+  const root = document.documentElement
+  const saved = localStorage.getItem(KEY)
+  if (saved === 'dark') root.classList.add('dark')
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    root.classList.toggle('dark')
+    localStorage.setItem(KEY, root.classList.contains('dark') ? 'dark' : 'light')
+  })
+</script>

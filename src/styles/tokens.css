@@ -1,27 +1,53 @@
+/* ── Mintly Documentos — identidade "Editorial de imprensa" ──────────────
+   Papel quente + tinta, verde Mintly como tinta de destaque.
+   Dark = tinta clara sobre carvão QUENTE (não azulado de framework). */
 :root {
-  --radius: 0.875rem;
-  --background: oklch(0.985 0.005 220);
-  --foreground: oklch(0.27 0.03 260);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.27 0.03 260);
-  --primary: oklch(0.78 0.2 148);
-  --primary-foreground: oklch(0.22 0.04 160);
-  --muted: oklch(0.965 0.006 220);
-  --muted-foreground: oklch(0.5 0.02 250);
-  --accent: oklch(0.95 0.04 165);
-  --border: oklch(0.92 0.008 230);
-  --ocean: oklch(0.46 0.07 220);
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --radius: 2px;
+
+  /* papel e tinta */
+  --background: oklch(0.977 0.006 90);
+  --foreground: oklch(0.26 0.02 60);
+  --card: oklch(0.992 0.004 90);
+  --card-foreground: var(--foreground);
+  --muted: oklch(0.945 0.008 88);
+  --muted-foreground: oklch(0.48 0.015 70);
+
+  /* verde Mintly: tinta (texto/links) e mint vivo (realces) */
+  --ink-green: oklch(0.5 0.11 155);
+  --mint: oklch(0.78 0.2 148);
+  --mint-soft: oklch(0.93 0.05 152);
+  --primary: var(--ink-green);
+  --primary-foreground: oklch(0.99 0.003 90);
+  --accent: var(--mint-soft);
+  --ocean: oklch(0.45 0.06 230);
+
+  /* estrutura editorial */
+  --border: oklch(0.885 0.012 85);
+  --hairline: oklch(0.885 0.012 85);
+  --rule-strong: var(--foreground);
+
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'Hanken Grotesk', 'Seravek', 'Gill Sans', sans-serif;
+  --font-mono: 'Spline Sans Mono', ui-monospace, 'Cascadia Mono', monospace;
 }
 
 .dark {
-  --background: oklch(0.21 0.02 250);
-  --foreground: oklch(0.97 0.005 220);
-  --card: oklch(0.255 0.022 250);
-  --card-foreground: oklch(0.97 0.005 220);
-  --muted: oklch(0.3 0.025 250);
-  --muted-foreground: oklch(0.72 0.02 230);
-  --accent: oklch(0.34 0.05 165);
-  --border: oklch(1 0 0 / 8%);
-  --ocean: oklch(0.7 0.08 220);
+  --background: oklch(0.205 0.012 80);
+  --foreground: oklch(0.93 0.012 90);
+  --card: oklch(0.235 0.014 80);
+  --card-foreground: var(--foreground);
+  --muted: oklch(0.27 0.016 80);
+  --muted-foreground: oklch(0.7 0.015 85);
+
+  --ink-green: oklch(0.8 0.14 150);
+  --mint: oklch(0.8 0.17 150);
+  --mint-soft: oklch(0.34 0.05 152);
+  --primary: var(--ink-green);
+  --primary-foreground: oklch(0.2 0.03 155);
+  --accent: var(--mint-soft);
+  --ocean: oklch(0.74 0.07 230);
+
+  --border: oklch(1 0 0 / 11%);
+  --hairline: oklch(1 0 0 / 11%);
+  --rule-strong: var(--foreground);
 }

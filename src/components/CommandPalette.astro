@@ -29,12 +29,13 @@ const base = import.meta.env.BASE_URL
 </script>
 <style>
   #cmdk {
-    border: none; border-radius: 14px; padding: 16px;
+    border: 1px solid var(--rule-strong); border-radius: var(--radius); padding: 18px;
     width: min(640px, 92vw); max-height: 80vh;
-    background: var(--card); color: var(--foreground);
-    box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    background: var(--background); color: var(--foreground);
+    box-shadow: 0 24px 80px oklch(0 0 0 / 30%);
   }
 </style>
 <style is:global>
-  #cmdk::backdrop { background: rgba(0,0,0,.45); }
+  #cmdk::backdrop { background: oklch(0 0 0 / 45%); backdrop-filter: blur(2px); }
+  #cmdk { --pagefind-ui-font: var(--font-sans); --pagefind-ui-primary: var(--ink-green); --pagefind-ui-text: var(--foreground); --pagefind-ui-background: var(--background); --pagefind-ui-border: var(--hairline); --pagefind-ui-border-radius: var(--radius); }
 </style>

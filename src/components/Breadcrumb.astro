@@ -6,7 +6,12 @@ const parts = path ? path.split('/') : []
 let acc = ''
 const crumbs = parts.map((p) => { acc = acc ? `${acc}/${p}` : p; return { label: p, href: `${base}/${acc}` } })
 ---
-<nav style="font-size:13px;color:var(--muted-foreground);margin-bottom:16px;">
+<nav class="breadcrumb meta" aria-label="Você está aqui">
   <a href={base}>Início</a>
-  {crumbs.map((c) => (<span> / <a href={c.href}>{c.label}</a></span>))}
+  {crumbs.map((c) => (<span aria-hidden="true"> · </span><a href={c.href}>{c.label}</a>))}
 </nav>
+<style>
+  .breadcrumb { margin-bottom: 22px; }
+  .breadcrumb a { color: var(--muted-foreground); }
+  .breadcrumb a:hover { color: var(--ink-green); }
+</style>

@@ -3,13 +3,13 @@ import BaseLayout from './BaseLayout.astro'
 import Sidebar from '../components/Sidebar.astro'
 import Breadcrumb from '../components/Breadcrumb.astro'
 import type { FolderNode } from '../lib/content-tree'
-interface Props { title: string, tree: FolderNode, current: string }
-const { title, tree, current } = Astro.props
+interface Props { title: string, description?: string, tree: FolderNode, current: string }
+const { title, description, tree, current } = Astro.props
 ---
-<BaseLayout title={title}>
-  <div style="display:flex;align-items:flex-start;max-width:1200px;margin:0 auto;">
+<BaseLayout title={title} description={description} showMenuButton={true}>
+  <div class="doc-shell">
     <Sidebar tree={tree} current={current} />
-    <main style="flex:1;min-width:0;padding:24px 28px 56px;">
+    <main id="conteudo" class="doc-main">
       <Breadcrumb path={current} />
       <slot />
     </main>

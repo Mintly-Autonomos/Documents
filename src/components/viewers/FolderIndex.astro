@@ -1,22 +1,30 @@
 ---
 import type { FolderNode } from '../../lib/content-tree'
 import { ghNew } from '../../lib/github-links'
-import { folderIcon, fileIcon } from '../../lib/icons'
+import { kindLabel } from '../../lib/icons'
 interface Props { node: FolderNode, repo: string }
 const { node, repo } = Astro.props
 const base = import.meta.env.BASE_URL
+const countLabel = `${node.children.length} ite${node.children.length === 1 ? 'm' : 'ns'}`
 ---
-<div style="display:flex;justify-content:space-between;align-items:center;">
-  <h1 style="margin:0;">{node.name || 'Documentos'}</h1>
-  <a class="btn" href={ghNew(repo, node.path)} target="_blank" rel="noopener">➕ Novo documento</a>
-</div>
-<p style="color:var(--muted-foreground);">{node.children.length} item(ns)</p>
-<div style="display:grid;gap:10px;margin-top:8px;">
+<header style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;">
+  <div>
+    <p class="kicker" style="margin:0 0 6px;">Pasta</p>
+    <h1 style="margin:0;font-size:2rem;">{node.name || 'Documentos'}</h1>
+  </div>
+  <a class="btn" href={ghNew(repo, node.path)} target="_blank" rel="noopener">Novo documento ↗</a>
+</header>
+<p class="meta" style="margin:10px 0 0;">{countLabel}</p>
+
+<ul class="index-list">
   {node.children.map((c) => (
-    <a class="card" href={`${base}/${c.path}`} style="display:flex;align-items:center;gap:10px;color:var(--foreground);">
-      <span style="font-size:20px;">{c.type === 'folder' ? folderIcon : fileIcon(c.kind)}</span>
-      <span>{c.name}{c.type === 'folder' ? '/' : ''}</span>
-    </a>
+    <li>
+      <a href={`${base}/${c.path}`}>
+        <span class="name">{c.name}{c.type === 'folder' ? ' /' : ''}</span>
+        <span class="leader" aria-hidden="true"></span>
+        <span class="tag">{c.type === 'folder' ? `${c.children.length} itens` : kindLabel(c.kind)}</span>
+      </a>
+    </li>
   ))}
-  {node.children.length === 0 && <p style="color:var(--muted-foreground);">Pasta vazia.</p>}
-</div>
+</ul>
+{node.children.length === 0 && <p style="color:var(--muted-foreground);font-style:italic;">Pasta vazia.</p>}

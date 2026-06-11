@@ -3,9 +3,17 @@ import { ghEdit, ghNew, ghView, ghHistory } from '../lib/github-links'
 interface Props { repo: string, filePath: string, folderPath: string }
 const { repo, filePath, folderPath } = Astro.props
 ---
-<div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 20px;">
-  <a class="btn" href={ghEdit(repo, filePath)} target="_blank" rel="noopener">✏️ Editar</a>
-  <a class="btn btn--ghost" href={ghNew(repo, folderPath)} target="_blank" rel="noopener">➕ Novo</a>
-  <a class="btn btn--ghost" href={ghView(repo, filePath)} target="_blank" rel="noopener">🔗 Ver no GitHub</a>
-  <a class="btn btn--ghost" href={ghHistory(repo, filePath)} target="_blank" rel="noopener">🕘 Histórico</a>
-</div>
+<nav class="file-actions meta" aria-label="Ações do documento">
+  <a href={ghEdit(repo, filePath)} target="_blank" rel="noopener">Editar ↗</a>
+  <span aria-hidden="true">·</span>
+  <a href={ghNew(repo, folderPath)} target="_blank" rel="noopener">Novo ↗</a>
+  <span aria-hidden="true">·</span>
+  <a href={ghView(repo, filePath)} target="_blank" rel="noopener">Ver no GitHub ↗</a>
+  <span aria-hidden="true">·</span>
+  <a href={ghHistory(repo, filePath)} target="_blank" rel="noopener">Histórico ↗</a>
+</nav>
+<style>
+  .file-actions { display: flex; gap: 10px; flex-wrap: wrap; margin: 6px 0 4px; }
+  .file-actions a { color: var(--muted-foreground); }
+  .file-actions a:hover { color: var(--ink-green); }
+</style>

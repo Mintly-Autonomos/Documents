@@ -12,6 +12,7 @@ const base = import.meta.env.BASE_URL
 const DESCRIPTIONS: Record<string, string> = {
   'release-notes': 'O que cada ciclo entregou, escrito para gente de produto — resumo, riscos e caminho até produção.',
   diagrams: 'Fluxos e jornadas do produto, desenhados em Mermaid e renderizados aqui mesmo.',
+  sistema: 'Documentação técnica: API, biblioteca compartilhada, frontend e guias de convenções e release.',
 }
 const sections = topLevelSections(tree, DESCRIPTIONS)
 const totalDocs = flattenFiles(tree).length

@@ -1,0 +1,150 @@
+---
+import { fileURLToPath } from 'node:url'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { buildContentTree, type FolderNode } from '../lib/content-tree'
+import { flattenFiles } from '../lib/search-index'
+import { topLevelSections } from '../lib/landing'
+
+const DOCS_DIR = fileURLToPath(new URL('../../docs', import.meta.url))
+const tree = buildContentTree(DOCS_DIR)
+const base = import.meta.env.BASE_URL
+
+const DESCRIPTIONS: Record<string, string> = {
+  'release-notes': 'O que cada ciclo entregou, escrito para gente de produto — resumo, riscos e caminho até produção.',
+  diagrams: 'Fluxos e jornadas do produto, desenhados em Mermaid e renderizados aqui mesmo.',
+}
+const sections = topLevelSections(tree, DESCRIPTIONS)
+const totalDocs = flattenFiles(tree).length
+const hoje = new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })
+
+// Release mais recente: convenção RELEASE-AAAAMMDD.md ordena por nome.
+const releasesFolder = tree.children.find((c): c is FolderNode => c.type === 'folder' && c.name === 'release-notes')
+const latestRelease = releasesFolder?.children
+  .filter((c) => c.type === 'file')
+  .sort((a, b) => b.name.localeCompare(a.name))[0] ?? null
+---
+<BaseLayout title="Mintly · Documentos" description="A documentação viva do Mintly — gestão financeira para restaurantes. Releases, specs e diagramas num só lugar." ogType="website">
+  <main id="conteudo" class="home">
+    <section class="hero">
+      <span class="hero__pilcrow" aria-hidden="true">¶</span>
+      <p class="kicker rise rise-1">Mintly — gestão financeira para restaurantes</p>
+      <h1 class="hero__title rise rise-2">A documentação <em>viva</em> do projeto.</h1>
+      <p class="hero__lede rise rise-3">
+        Releases, especificações e diagramas da equipe, sempre na versão que está no repositório —
+        com busca em tudo, inclusive dentro de PDFs e planilhas.
+      </p>
+      <div class="hero__actions rise rise-4">
+        <a class="btn" href={`${base}/buscar`}>Buscar nos documentos</a>
+        <span class="meta">ou pressione ⌘K em qualquer página</span>
+      </div>
+      <p class="meta hero__masthead rise rise-4">
+        edição contínua · {hoje} · {totalDocs} documentos publicados
+      </p>
+    </section>
+
+    <hr class="rule--double" />
+
+    <section class="sections" aria-label="Seções da documentação">
+      {sections.map((s, i) => (
+        <a class={`section-card rise rise-${Math.min(i + 1, 4)}`} href={`${base}/${s.path}`}>
+          <span class="folio section-card__num">{String(i + 1).padStart(2, '0')}</span>
+          <span class="section-card__body">
+            <span class="section-card__name">{s.name}</span>
+            <span class="section-card__desc">{s.description}</span>
+          </span>
+          <span class="tag">{s.count} {s.count === 1 ? 'doc' : 'docs'}</span>
+        </a>
+      ))}
+    </section>
+
+    <section class="start" aria-label="Comece por aqui">
+      <h2 class="kicker" style="margin:0 0 14px;">Comece por aqui</h2>
+      <ul class="index-list" style="margin:0;">
+        {latestRelease && (
+          <li>
+            <a href={`${base}/${latestRelease.path}`}>
+              <span class="name">Release mais recente — {latestRelease.name}</span>
+              <span class="leader" aria-hidden="true"></span>
+              <span class="tag">novo</span>
+            </a>
+          </li>
+        )}
+        <li>
+          <a href={`${base}/diagrams`}>
+            <span class="name">Jornada do usuário e fluxos do produto</span>
+            <span class="leader" aria-hidden="true"></span>
+            <span class="tag">diagramas</span>
+          </a>
+        </li>
+        <li>
+          <a href={`${base}/buscar`}>
+            <span class="name">Procurando algo específico?</span>
+            <span class="leader" aria-hidden="true"></span>
+            <span class="tag">busca</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <footer class="home__footer">
+      <hr class="rule" />
+      <p class="meta">
+        Mintly · Autônomos — documentação do TCC ·
+        <a href="https://github.com/Mintly-Autonomos/Documents" target="_blank" rel="noopener">editar no GitHub ↗</a>
+      </p>
+    </footer>
+  </main>
+</BaseLayout>
+
+<style>
+  .home { max-width: 880px; margin: 0 auto; padding: 0 28px 80px; }
+
+  .hero { position: relative; padding: 72px 0 44px; }
+  .hero__pilcrow {
+    position: absolute; right: -10px; top: 8px;
+    font-family: var(--font-display); font-style: italic;
+    font-size: 240px; line-height: 1;
+    color: var(--mint); opacity: 0.14;
+    user-select: none; pointer-events: none;
+  }
+  .hero__title {
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    margin: 14px 0 18px; max-width: 14ch;
+  }
+  .hero__title em { color: var(--ink-green); font-weight: 430; }
+  .hero__lede {
+    font-size: 18px; line-height: 1.7;
+    color: var(--muted-foreground);
+    max-width: 54ch; margin: 0 0 28px;
+  }
+  .hero__actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .hero__masthead { margin: 26px 0 0; }
+
+  .sections { display: flex; flex-direction: column; margin: 8px 0 56px; }
+  .section-card {
+    display: flex; align-items: baseline; gap: 22px;
+    padding: 26px 4px;
+    border-bottom: 1px solid var(--hairline);
+    color: var(--foreground);
+  }
+  .section-card:hover { text-decoration: none; background: linear-gradient(to right, var(--mint-soft), transparent 60%); }
+  .section-card__num { font-size: 1.5rem; min-width: 44px; }
+  .section-card__body { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .section-card__name {
+    font-family: var(--font-display); font-size: 1.45rem; font-weight: 560;
+    letter-spacing: -0.01em;
+  }
+  .section-card:hover .section-card__name { font-style: italic; color: var(--ink-green); }
+  .section-card__desc { color: var(--muted-foreground); font-size: 15px; max-width: 58ch; }
+
+  .start { margin-bottom: 48px; }
+  .home__footer .rule { margin: 0 0 14px; }
+  .home__footer a { color: var(--muted-foreground); }
+  .home__footer a:hover { color: var(--ink-green); }
+
+  @media (max-width: 640px) {
+    .hero { padding: 44px 0 32px; }
+    .hero__pilcrow { font-size: 150px; right: -18px; }
+    .section-card { gap: 14px; padding: 20px 2px; }
+  }
+</style>

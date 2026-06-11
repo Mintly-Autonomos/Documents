@@ -1,4 +1,11 @@
-<button id="theme-toggle" class="btn btn--ghost" aria-label="Alternar tema">🌗</button>
+<button id="theme-toggle" class="btn btn--ghost" aria-label="Alternar tema claro/escuro">
+  <span class="only-light" aria-hidden="true">Noite</span>
+  <span class="only-dark" aria-hidden="true">Dia</span>
+</button>
+<style is:global>
+  .dark .only-light { display: none; }
+  html:not(.dark) .only-dark { display: none; }
+</style>
 <script>
   const KEY = 'mintly-theme'
   const root = document.documentElement

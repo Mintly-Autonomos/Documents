@@ -20,6 +20,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@types/sanitize-html": "^2.16.1",
     "docx": "^9.7.1",
     "exceljs": "^4.4.0",
@@ -27,6 +28,7 @@
     "pagefind": "^1.1.0",
     "pdf-lib": "^1.17.1",
     "pptxgenjs": "^4.0.1",
+    "satori": "^0.26.0",
     "typescript": "^5.6.0",
     "unist-util-visit": "^5.1.0",
     "vitest": "^3.0.0",

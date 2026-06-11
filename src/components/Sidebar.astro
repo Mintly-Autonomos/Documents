@@ -1,24 +1,42 @@
 ---
 import type { FolderNode, TreeNode } from '../lib/content-tree'
-import { folderIcon, fileIcon } from '../lib/icons'
 interface Props { tree: FolderNode, current: string }
 const { tree, current } = Astro.props
 const base = import.meta.env.BASE_URL
-function render (node: TreeNode): string {
+
+function renderNode (node: TreeNode): string {
   if (node.type === 'file') {
-    const active = node.path === current ? 'font-weight:700;color:var(--primary);' : ''
-    return `<li><a style="${active}" href="${base}/${node.path}">${fileIcon(node.kind)} ${node.name}</a></li>`
+    const active = node.path === current ? ' class="is-active" aria-current="page"' : ''
+    return `<li><a${active} href="${base}/${node.path}">${node.name}</a></li>`
   }
-  const inner = node.children.map(render).join('')
-  if (node.path === '') return inner
-  return `<li><details open><summary>${folderIcon} ${node.name}</summary><ul>${inner}</ul></details></li>`
+  const inner = node.children.map(renderNode).join('')
+  return `<li><details open><summary>${node.name}</summary><ul>${inner}</ul></details></li>`
 }
-const html = render(tree)
+
+// Raiz: pastas top-level ganham numeração editorial (01, 02, …)
+let folio = 0
+const html = tree.children.map((node) => {
+  if (node.type === 'folder') {
+    folio += 1
+    const num = String(folio).padStart(2, '0')
+    const inner = node.children.map(renderNode).join('')
+    return `<li><details open><summary><span class="folio">${num}</span>${node.name}</summary><ul>${inner}</ul></details></li>`
+  }
+  return renderNode(node)
+}).join('')
 ---
-<aside style="width:260px;flex-shrink:0;border-right:1px solid var(--border);padding:18px;overflow:auto;">
-  <ul style="list-style:none;padding:0;margin:0;line-height:1.9;" set:html={html} />
+<button id="sidebar-backdrop" class="sidebar__backdrop" tabindex="-1" aria-hidden="true"></button>
+<aside id="sidebar" class="sidebar" aria-label="Índice de documentos">
+  <ul set:html={html} />
 </aside>
-<style>
-  aside :global(ul) { list-style:none; padding-left:14px; margin:0; }
-  aside :global(summary) { cursor:pointer; }
-</style>
+<script>
+  const btn = document.getElementById('menu-btn')
+  const backdrop = document.getElementById('sidebar-backdrop')
+  const close = () => { document.body.classList.remove('nav-open'); btn?.setAttribute('aria-expanded', 'false') }
+  btn?.addEventListener('click', () => {
+    const open = document.body.classList.toggle('nav-open')
+    btn.setAttribute('aria-expanded', String(open))
+  })
+  backdrop?.addEventListener('click', close)
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') close() })
+</script>

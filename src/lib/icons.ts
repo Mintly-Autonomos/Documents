@@ -1,5 +1,6 @@
 import type { FileKind } from './file-kind'
-export const folderIcon = '📁'
-export function fileIcon (kind: FileKind): string {
-  return { markdown: '📄', pdf: '📕', image: '🖼️', office: '📊', other: '📎' }[kind]
+
+/** Selo tipográfico do tipo de arquivo (sem emoji — identidade editorial). */
+export function kindLabel (kind: FileKind): string {
+  return { markdown: 'md', pdf: 'pdf', image: 'img', office: 'xls', other: 'arq' }[kind]
 }

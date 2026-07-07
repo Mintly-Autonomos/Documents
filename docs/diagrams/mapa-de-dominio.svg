@@ -8,7 +8,7 @@
     .route { fill: #64748b; font-size: 10.5px; font-family: ui-monospace, monospace; }
     .uc { fill: #0f172a; font-size: 11.5px; font-weight: 600; }
     .tag { fill: #eef2f7; }
-    .tagtxt { fill: #475569; font-size: 9px; font-family: ui-monospace, monospace; }
+    .tagtxt { fill: #475569; font-size: 8px; font-family: ui-monospace, monospace; }
     .txbadge { fill: #fef3c7; stroke: #f59e0b; stroke-width: 1; }
     .txtxt { fill: #b45309; font-size: 8.5px; font-weight: 700; }
     .legend { fill: #64748b; font-size: 10.5px; }

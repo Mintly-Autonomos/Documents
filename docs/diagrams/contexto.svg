@@ -57,11 +57,21 @@
   <text class="sub" x="760" y="170">um banco por env</text>
   <text class="sub" x="692" y="196">app · staging · production</text>
 
+  <!-- Sapphire (base de schemas da lib) -->
+  <rect class="card" x="88" y="300" width="184" height="72" rx="11" stroke="#8b5cf6"/>
+  <text class="h" x="106" y="326" font-size="12" fill="#7c3aed">Sapphire</text>
+  <text class="sub" x="106" y="346">@ascendance-hub/</text>
+  <text class="sub" x="106" y="362">sapphire-core (schemas)</text>
+
   <!-- Lib (shared contract) -->
   <rect class="card" x="300" y="300" width="200" height="72" rx="11" stroke="#8b5cf6"/>
   <text class="h" x="318" y="326" fill="#7c3aed">mintly-lib (npm)</text>
   <text class="sub" x="318" y="346">contratos + schemas</text>
   <text class="sub" x="318" y="362">+ clients HTTP tipados</text>
+
+  <!-- lib declara schemas com Sapphire -->
+  <line class="lib" x1="298" y1="336" x2="274" y2="336"/>
+  <text class="libt" x="196" y="392">schemas via Sapphire</text>
 
   <!-- valkyrie + email -->
   <rect class="card" x="560" y="300" width="150" height="72" rx="11"/>

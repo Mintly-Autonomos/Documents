@@ -76,3 +76,7 @@ import { userSchema, passwordSchema, MasterClient, type User, type LoginResult }
 ## Scripts
 
 `npm run build` (tsc → `build/`) · `typecheck` · `lint` · `pack:check` (confere o conteúdo do pacote antes de publicar). Testes em **jest**.
+
+---
+
+> **Sapphire** (validação) e **valkyrie-jwt** (sessão) são libs de membros do grupo. Como cada uma está integrada ao Mintly está em [Bibliotecas externas](./bibliotecas-externas.md).

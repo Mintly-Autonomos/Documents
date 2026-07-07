@@ -1,0 +1,136 @@
+<svg viewBox="0 0 960 640" xmlns="http://www.w3.org/2000/svg" font-family="Inter, Segoe UI, system-ui, sans-serif" role="img" aria-label="Coleções e relações da MintlyApi">
+  <style>
+    .bg { fill: #ffffff; } .ent { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.2; }
+    .title { fill: #0f172a; font-weight: 700; font-size: 15px; }
+    .sub { fill: #64748b; font-size: 10.5px; }
+    .ename { fill: #0f172a; font-weight: 700; font-size: 12px; font-family: ui-monospace, monospace; }
+    .field { fill: #475569; font-size: 10px; font-family: ui-monospace, monospace; }
+    .rel { stroke: #8b5cf6; stroke-width: 1.6; fill: none; stroke-dasharray: 4 3; marker-end: url(#er); }
+    .relt { fill: #7c3aed; font-size: 9.5px; font-style: italic; }
+    .grp { fill: #64748b; font-weight: 700; font-size: 11px; letter-spacing: .04em; }
+    .badge { font-size: 9px; font-weight: 700; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #0b1120; } .ent { fill: #111827; stroke: #334155; }
+      .title, .ename { fill: #e5edf7; } .sub, .grp { fill: #94a3b8; } .field { fill: #cbd5e1; }
+      .rel { stroke: #a78bfa; } .relt { fill: #a78bfa; }
+    }
+  </style>
+  <defs><marker id="er" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8b5cf6"/></marker></defs>
+
+  <rect class="bg" x="0" y="0" width="960" height="640"/>
+  <text class="title" x="28" y="32">Coleções &amp; relações — modelagem NoSQL (Extended Reference)</text>
+  <text class="sub" x="28" y="50">Sem joins: relações "vivas" por id + snapshots embutidos (Extended Reference). Badges: 🏢 escopo por restaurantId · 🔑 índice único · ⏱ TTL.</text>
+
+  <!-- GROUP: Identidade & tenant -->
+  <text class="grp" x="28" y="82">IDENTIDADE &amp; TENANT</text>
+
+  <!-- users -->
+  <rect class="ent" x="28" y="92" width="188" height="118" rx="9"/>
+  <text class="ename" x="42" y="112">users</text>
+  <text class="badge" x="150" y="112" fill="#0d9488">🔑 email</text>
+  <line x1="28" y1="120" x2="216" y2="120" stroke="#e2e8f0"/>
+  <text class="field" x="42" y="136">email · passwordHash</text>
+  <text class="field" x="42" y="152">role · status · restaurantId 🏢</text>
+  <text class="field" x="42" y="168">person: { _id, name }  ⟶</text>
+  <text class="field" x="42" y="184">loginAttempts · blockedUntil</text>
+  <text class="field" x="42" y="200">termsAcceptedAt · lastAccessAt</text>
+
+  <!-- people -->
+  <rect class="ent" x="252" y="92" width="168" height="80" rx="9"/>
+  <text class="ename" x="266" y="112">people</text>
+  <line x1="252" y1="120" x2="420" y2="120" stroke="#e2e8f0"/>
+  <text class="field" x="266" y="136">name · phone</text>
+  <text class="field" x="266" y="152">cpf?</text>
+  <text class="field" x="266" y="168">audit</text>
+
+  <!-- restaurants -->
+  <rect class="ent" x="456" y="92" width="168" height="80" rx="9"/>
+  <text class="ename" x="470" y="112">restaurants</text>
+  <line x1="456" y1="120" x2="624" y2="120" stroke="#e2e8f0"/>
+  <text class="field" x="470" y="136">name</text>
+  <text class="field" x="470" y="152">audit</text>
+  <text class="sub" x="470" y="168">a organização dona dos dados</text>
+
+  <!-- rel user->person -->
+  <path class="rel" d="M180 178 C 230 178, 236 150, 250 140"/>
+  <text class="relt" x="196" y="196">extended-ref</text>
+
+  <!-- GROUP: Financeiro -->
+  <text class="grp" x="28" y="250">FINANCEIRO (todo doc tem restaurantId 🏢)</text>
+
+  <!-- financial_accounts -->
+  <rect class="ent" x="28" y="262" width="270" height="140" rx="9"/>
+  <text class="ename" x="42" y="282">financial_accounts</text>
+  <text class="badge" x="212" y="282" fill="#0d9488">🔑 nome+tipo</text>
+  <line x1="28" y1="290" x2="298" y2="290" stroke="#e2e8f0"/>
+  <text class="field" x="42" y="306">restaurantId 🏢 · name · type · status</text>
+  <text class="field" x="42" y="322">isDefault · availableBalance (Dec128)</text>
+  <text class="field" x="42" y="338">predictedBalance (Dec128)</text>
+  <text class="field" x="42" y="354">feePercent? · settlementDays?  (platform)</text>
+  <text class="field" x="42" y="370">history[] · audit</text>
+  <text class="sub" x="42" y="392">união discriminada por `type` (platform ⇔ taxa/prazo)</text>
+
+  <!-- financial_categories -->
+  <rect class="ent" x="318" y="262" width="270" height="140" rx="9"/>
+  <text class="ename" x="332" y="282">financial_categories</text>
+  <line x1="318" y1="290" x2="588" y2="290" stroke="#e2e8f0"/>
+  <text class="field" x="332" y="306">restaurantId 🏢 · name · type</text>
+  <text class="field" x="332" y="322">behavior · operationalNature</text>
+  <text class="field" x="332" y="338">status · isSystem · usage</text>
+  <text class="field" x="332" y="354">history[] · audit</text>
+  <text class="sub" x="332" y="378">isSystem = criada no onboarding (não editável)</text>
+
+  <!-- financial_movements -->
+  <rect class="ent" x="608" y="262" width="324" height="160" rx="9"/>
+  <text class="ename" x="622" y="282">financial_movements</text>
+  <text class="badge" x="820" y="282" fill="#0d9488">🔑 dup(&lt;2min)</text>
+  <line x1="608" y1="290" x2="932" y2="290" stroke="#e2e8f0"/>
+  <text class="field" x="622" y="306">restaurantId 🏢 · direction · status · date</text>
+  <text class="field" x="622" y="322">grossValue · feeValue · netValue (Dec128)</text>
+  <text class="field" x="622" y="338">account: { _id, name, type }   ⟵ snapshot</text>
+  <text class="field" x="622" y="354">category: { _id, name, type }  ⟵ snapshot</text>
+  <text class="field" x="622" y="370">paymentMethod · origin · history[]</text>
+  <text class="field" x="622" y="386">feePercentApplied? · predictedReceiptDate?</text>
+  <text class="sub" x="622" y="408">snapshots congelam conta/categoria no momento do lançamento</text>
+
+  <!-- rels movement -> account/category -->
+  <path class="rel" d="M620 340 C 400 340, 320 360, 300 372"/>
+  <path class="rel" d="M620 356 C 560 380, 500 385, 470 388"/>
+
+  <!-- GROUP: Infra -->
+  <text class="grp" x="28" y="462">INFRAESTRUTURA</text>
+
+  <rect class="ent" x="28" y="474" width="216" height="96" rx="9"/>
+  <text class="ename" x="42" y="494">audit_logs</text>
+  <text class="badge" x="188" y="494" fill="#b45309">⏱ 365d</text>
+  <line x1="28" y1="502" x2="244" y2="502" stroke="#e2e8f0"/>
+  <text class="field" x="42" y="518">event · userId · restaurantId</text>
+  <text class="field" x="42" y="534">data · createdAt</text>
+  <text class="sub" x="42" y="554">login, signup, block, reset… (TTL 1 ano)</text>
+
+  <rect class="ent" x="260" y="474" width="230" height="96" rx="9"/>
+  <text class="ename" x="274" y="494">password_reset_tokens</text>
+  <text class="badge" x="440" y="494" fill="#b45309">⏱ TTL</text>
+  <line x1="260" y1="502" x2="490" y2="502" stroke="#e2e8f0"/>
+  <text class="field" x="274" y="518">userId · token = sha256</text>
+  <text class="field" x="274" y="534">expiresAt · usedAt</text>
+  <text class="sub" x="274" y="554">uso único; guarda o hash, não o token</text>
+
+  <rect class="ent" x="506" y="474" width="200" height="96" rx="9"/>
+  <text class="ename" x="520" y="494">valkyrie_*</text>
+  <line x1="506" y1="502" x2="706" y2="502" stroke="#e2e8f0"/>
+  <text class="field" x="520" y="518">refresh tokens (rotação)</text>
+  <text class="field" x="520" y="534">geridos pela lib valkyrie-jwt</text>
+  <text class="sub" x="520" y="554">infra de sessão</text>
+
+  <rect class="ent" x="722" y="474" width="210" height="96" rx="9"/>
+  <text class="ename" x="736" y="494">app.valid_environments</text>
+  <line x1="722" y1="502" x2="932" y2="502" stroke="#e2e8f0"/>
+  <text class="field" x="736" y="518">name  (banco `app` global)</text>
+  <text class="sub" x="736" y="538">allowlist de env (C2);</text>
+  <text class="sub" x="736" y="554">fora do escopo de tenant.</text>
+
+  <!-- legend -->
+  <text class="relt" x="28" y="602">⟶ Extended Reference (id + snapshot embutido, sem join)</text>
+  <text class="sub" x="360" y="602">🏢 escopado por restaurantId   ·   🔑 índice único   ·   ⏱ índice TTL (expira sozinho)</text>
+</svg>

@@ -1,0 +1,96 @@
+<svg viewBox="0 0 940 560" xmlns="http://www.w3.org/2000/svg" font-family="Inter, Segoe UI, system-ui, sans-serif" role="img" aria-label="Modelo de dinheiro da MintlyApi">
+  <style>
+    .bg { fill: #ffffff; } .panel { fill: #f8fafc; stroke: #e2e8f0; stroke-width: 1; }
+    .title { fill: #0f172a; font-weight: 700; font-size: 15px; }
+    .h { fill: #0f172a; font-weight: 700; font-size: 12.5px; }
+    .sub { fill: #64748b; font-size: 10.5px; }
+    .mono { fill: #475569; font-size: 11px; font-family: ui-monospace, monospace; }
+    .flow { stroke: #94a3b8; stroke-width: 2; fill: none; marker-end: url(#a); }
+    .ah { fill: #94a3b8; }
+    .val { fill: #0f172a; font-size: 12px; font-weight: 600; font-family: ui-monospace, monospace; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #0b1120; } .panel { fill: #111827; stroke: #1f2a3c; }
+      .title, .h, .val { fill: #e5edf7; } .sub { fill: #94a3b8; } .mono { fill: #cbd5e1; }
+      .flow, .ah { stroke: #64748b; fill: #64748b; }
+    }
+  </style>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+
+  <rect class="bg" x="0" y="0" width="940" height="560"/>
+  <text class="title" x="28" y="34">Modelo de dinheiro — `number` no domínio, `Decimal128` na persistência</text>
+  <text class="sub" x="28" y="53" font-size="11">O cálculo passa por centavos inteiros (nunca float); o saldo acumula com `$inc` Decimal128 dentro da transação.</text>
+
+  <!-- Domain -->
+  <rect class="panel" x="28" y="78" width="250" height="150" rx="11"/>
+  <rect x="28" y="78" width="6" height="150" rx="3" fill="#10b981"/>
+  <text class="h" x="48" y="102" fill="#047857">Domínio (number)</text>
+  <text class="sub" x="48" y="120">regras puras · movement-rules.ts</text>
+  <text class="val" x="48" y="146">grossValue: 100.00</text>
+  <text class="val" x="48" y="168">feeValue:   12.50</text>
+  <text class="val" x="48" y="190">netValue:   87.50</text>
+  <text class="sub" x="48" y="214">fee só em ENTRADA de conta platform.</text>
+
+  <!-- boundary -->
+  <rect class="panel" x="345" y="78" width="250" height="150" rx="11"/>
+  <rect x="345" y="78" width="6" height="150" rx="3" fill="#8b5cf6"/>
+  <text class="h" x="365" y="102" fill="#7c3aed">Borda (money.ts)</text>
+  <text class="mono" x="365" y="126">toCents(v) = round(v·100)</text>
+  <text class="sub" x="365" y="142">arredonda a 4 casas (sem drift de float)</text>
+  <text class="mono" x="365" y="166">toDecimal128(v)</text>
+  <text class="sub" x="365" y="182">→ Decimal128 via centavos inteiros</text>
+  <text class="mono" x="365" y="206">decimalToNumber(d)</text>
+  <text class="sub" x="365" y="222">← volta pra number na leitura</text>
+
+  <!-- persistence -->
+  <rect class="panel" x="662" y="78" width="250" height="150" rx="11"/>
+  <rect x="662" y="78" width="6" height="150" rx="3" fill="#f59e0b"/>
+  <text class="h" x="682" y="102" fill="#b45309">Persistência (Decimal128)</text>
+  <text class="sub" x="682" y="120">MongoDB · dinheiro exato</text>
+  <text class="val" x="682" y="146">grossValue: 100.00</text>
+  <text class="val" x="682" y="168">netValue:   87.50</text>
+  <text class="val" x="682" y="190">availableBalance …</text>
+  <text class="sub" x="682" y="214">$inc soma no servidor (decimal exato).</text>
+
+  <line class="flow" x1="278" y1="140" x2="343" y2="140"/>
+  <text class="sub" x="286" y="132">write</text>
+  <line class="flow" x1="595" y1="165" x2="660" y2="165"/>
+  <text class="sub" x="600" y="157">write</text>
+  <line class="flow" x1="660" y1="200" x2="597" y2="200"/>
+  <text class="sub" x="605" y="214">read</text>
+
+  <!-- Balance impact -->
+  <rect class="panel" x="28" y="256" width="884" height="278" rx="11"/>
+  <rect x="28" y="256" width="6" height="278" rx="3" fill="#0ea5e9"/>
+  <text class="h" x="48" y="280" fill="#0369a1">Impacto no saldo — BalanceImpact (bucket + delta)</text>
+  <text class="sub" x="48" y="298">O saldo da conta vive em 2 buckets. O status decide o bucket; a direção decide o sinal. cancelled = sem impacto.</text>
+
+  <!-- table headers -->
+  <g font-size="11">
+    <text class="h" x="60" y="332" font-size="11.5">status</text>
+    <text class="h" x="240" y="332" font-size="11.5">bucket</text>
+    <text class="h" x="470" y="332" font-size="11.5">direção → delta (sinal)</text>
+    <line x1="48" y1="342" x2="500" y2="342" stroke="#e2e8f0"/>
+
+    <text class="mono" x="60" y="364">settled</text>
+    <rect x="230" y="352" width="150" height="18" rx="9" fill="#dcfce7" stroke="#22c55e"/><text x="240" y="365" font-family="ui-monospace,monospace" font-size="10" fill="#15803d">availableBalance</text>
+    <text class="mono" x="470" y="364">in → +netValue</text>
+
+    <text class="mono" x="60" y="392">pending</text>
+    <rect x="230" y="380" width="150" height="18" rx="9" fill="#fef9c3" stroke="#eab308"/><text x="240" y="393" font-family="ui-monospace,monospace" font-size="10" fill="#a16207">predictedBalance</text>
+    <text class="mono" x="470" y="392">out → −grossValue</text>
+
+    <text class="mono" x="60" y="420">cancelled</text>
+    <rect x="230" y="408" width="150" height="18" rx="9" fill="#f1f5f9" stroke="#cbd5e1"/><text x="240" y="421" font-family="ui-monospace,monospace" font-size="10" fill="#64748b">— (nenhum)</text>
+    <text class="sub" x="470" y="420">entrada credita o líquido; saída debita o bruto.</text>
+  </g>
+
+  <!-- apply flow -->
+  <line x1="48" y1="440" x2="892" y2="440" stroke="#e2e8f0"/>
+  <text class="h" x="60" y="466" font-size="11.5">applyBalanceImpact (na transação)</text>
+  <text class="mono" x="60" y="490">accounts.updateOne(</text>
+  <text class="mono" x="80" y="508">{ _id, restaurantId },   // escopado por tenant</text>
+  <text class="mono" x="80" y="526">{ $inc: { [bucket]: toDecimal128(delta·sign) }, $set: { 'audit.updatedAt': now } } )</text>
+  <text class="sub" x="560" y="500">register aplica (+1); update reverte o antigo (−1)</text>
+  <text class="sub" x="560" y="516">e aplica o novo (+1); changeStatus troca o bucket.</text>
+  <text class="sub" x="560" y="532">matchedCount==0 → NotFoundError (sem drift silencioso).</text>
+</svg>

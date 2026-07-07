@@ -1,0 +1,100 @@
+<svg viewBox="0 0 940 560" xmlns="http://www.w3.org/2000/svg" font-family="Inter, Segoe UI, system-ui, sans-serif" role="img" aria-label="Modelo multi-tenant híbrido da MintlyApi">
+  <style>
+    .bg { fill: #ffffff; }
+    .panel { fill: #f8fafc; stroke: #e2e8f0; stroke-width: 1; }
+    .title { fill: #0f172a; font-weight: 700; font-size: 15px; }
+    .h { fill: #0f172a; font-weight: 700; font-size: 12.5px; }
+    .sub { fill: #64748b; font-size: 11px; }
+    .mono { fill: #475569; font-size: 10.5px; font-family: ui-monospace, monospace; }
+    .flow { stroke: #94a3b8; stroke-width: 2; fill: none; marker-end: url(#a); }
+    .ah { fill: #94a3b8; }
+    .dbtxt { fill: #0f172a; font-size: 11.5px; font-weight: 600; }
+    .pill { fill: #eef2f7; }
+    .pilltxt { fill: #475569; font-size: 9.5px; font-family: ui-monospace, monospace; }
+    .ok { fill: #059669; font-size: 10.5px; font-weight: 600; }
+    .warn { fill: #dc2626; font-size: 10.5px; font-weight: 600; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #0b1120; } .panel { fill: #111827; stroke: #1f2a3c; }
+      .title, .h, .dbtxt { fill: #e5edf7; } .sub, .mono { fill: #94a3b8; }
+      .flow, .ah { stroke: #64748b; fill: #64748b; }
+      .pill { fill: #1e293b; } .pilltxt { fill: #cbd5e1; }
+      .ok { fill: #34d399; } .warn { fill: #f87171; }
+    }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker>
+    <symbol id="db" viewBox="0 0 60 44">
+      <ellipse cx="30" cy="9" rx="26" ry="8" fill="none" stroke="#64748b" stroke-width="1.5"/>
+      <path d="M4 9 v26 a26 8 0 0 0 52 0 v-26" fill="none" stroke="#64748b" stroke-width="1.5"/>
+    </symbol>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="940" height="560"/>
+  <text class="title" x="28" y="34">Multi-tenant híbrido — banco por `env` + `restaurantId` por documento</text>
+  <text class="sub" x="28" y="53">Dois eixos independentes de isolamento: o `env` escolhe o BANCO; o `restaurantId` escolhe os DOCUMENTOS dentro do banco.</text>
+
+  <!-- Request -->
+  <rect class="panel" x="28" y="86" width="176" height="118" rx="11"/>
+  <text class="h" x="44" y="110">Request HTTP</text>
+  <rect class="pill" x="44" y="122" width="150" height="16" rx="8"/><text class="pilltxt" x="52" y="133">env: staging</text>
+  <rect class="pill" x="44" y="144" width="150" height="16" rx="8"/><text class="pilltxt" x="52" y="155">Authorization: Bearer …</text>
+  <text class="sub" x="44" y="180">env vem do header.</text>
+  <text class="sub" x="44" y="196">JWT carrega restaurantId.</text>
+
+  <!-- EIXO 1: env -> banco -->
+  <rect class="panel" x="244" y="86" width="230" height="210" rx="11"/>
+  <rect x="244" y="86" width="6" height="210" rx="3" fill="#6366f1"/>
+  <text class="h" x="264" y="110" fill="#4f46e5">Eixo 1 — seleção do banco</text>
+  <text class="mono" x="264" y="132">hook onRequest:</text>
+  <text class="mono" x="264" y="148">assertValidEnv(env)</text>
+  <text class="ok" x="264" y="168">✓ staging / production → segue</text>
+  <text class="warn" x="264" y="184">✗ outro → APP-0004 (400)</text>
+  <text class="mono" x="264" y="212">getDatabase(env):</text>
+  <text class="mono" x="264" y="228">client.db(env)</text>
+  <text class="sub" x="264" y="256">Cada env é um banco físico separado.</text>
+  <text class="sub" x="264" y="272">staging NÃO enxerga production</text>
+  <text class="sub" x="264" y="286">(isolamento no nível do banco).</text>
+
+  <!-- databases -->
+  <g transform="translate(516,96)">
+    <use href="#db" x="0" y="0" width="60" height="44"/>
+    <text class="dbtxt" x="70" y="18">app</text>
+    <text class="sub" x="70" y="34">config global · valid_environments</text>
+  </g>
+  <g transform="translate(516,152)">
+    <use href="#db" x="0" y="0" width="60" height="44"/>
+    <text class="dbtxt" x="70" y="18">staging</text>
+    <text class="sub" x="70" y="34">dados do ambiente de staging</text>
+  </g>
+  <g transform="translate(516,208)">
+    <use href="#db" x="0" y="0" width="60" height="44"/>
+    <text class="dbtxt" x="70" y="18">production</text>
+    <text class="sub" x="70" y="34">dados de produção</text>
+  </g>
+  <line class="flow" x1="480" y1="150" x2="512" y2="120"/>
+  <line class="flow" x1="480" y1="175" x2="512" y2="174"/>
+  <line class="flow" x1="480" y1="200" x2="512" y2="228"/>
+  <line class="flow" x1="204" y1="140" x2="242" y2="140"/>
+
+  <!-- EIXO 2: restaurantId -> docs -->
+  <rect class="panel" x="28" y="326" width="884" height="196" rx="11"/>
+  <rect x="28" y="326" width="6" height="196" rx="3" fill="#f59e0b"/>
+  <text class="h" x="48" y="350" fill="#b45309">Eixo 2 — escopo do dono (dentro do banco escolhido)</text>
+  <text class="mono" x="48" y="376">restaurantId  ←  claims do JWT validado (nunca de header)</text>
+  <text class="mono" x="48" y="398">withTenant(filter, ctx)  →  { ...filter, restaurantId }   em TODA operação da base</text>
+  <text class="sub" x="48" y="420">findById · find · findAll · update · delete · insert · query(mongo:filter) — todos escopados. Fecha o IDOR (S1/C1).</text>
+
+  <!-- collection with tagged docs -->
+  <rect class="panel" x="48" y="436" width="836" height="70" rx="9"/>
+  <text class="mono" x="64" y="458">financial_accounts (banco: staging)</text>
+  <g font-size="9.5" font-family="ui-monospace, monospace">
+    <rect x="64" y="468" width="180" height="28" rx="6" fill="#dcfce7" stroke="#22c55e"/>
+    <text x="74" y="481" fill="#15803d">_id: A · restaurantId: R1</text><text x="74" y="492" fill="#15803d">✓ visível p/ o dono R1</text>
+    <rect x="256" y="468" width="180" height="28" rx="6" fill="#dcfce7" stroke="#22c55e"/>
+    <text x="266" y="481" fill="#15803d">_id: B · restaurantId: R1</text><text x="266" y="492" fill="#15803d">✓ visível p/ o dono R1</text>
+    <rect x="448" y="468" width="180" height="28" rx="6" fill="#fee2e2" stroke="#ef4444"/>
+    <text x="458" y="481" fill="#b91c1c">_id: C · restaurantId: R2</text><text x="458" y="492" fill="#b91c1c">✗ filtrado (outro dono)</text>
+    <rect x="640" y="468" width="228" height="28" rx="6" fill="#fef9c3" stroke="#eab308"/>
+    <text x="650" y="481" fill="#a16207">withTenant garante: R1 nunca lê/edita</text><text x="650" y="492" fill="#a16207">documentos de R2 no mesmo banco.</text>
+  </g>
+</svg>

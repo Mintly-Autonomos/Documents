@@ -1,0 +1,111 @@
+<svg viewBox="0 0 960 620" xmlns="http://www.w3.org/2000/svg" font-family="Inter, Segoe UI, system-ui, sans-serif" role="img" aria-label="Topologia de deploy do Mintly">
+  <style>
+    .bg { fill: #ffffff; } .card { fill: #f8fafc; stroke: #e2e8f0; stroke-width: 1; }
+    .title { fill: #0f172a; font-weight: 700; font-size: 15px; }
+    .h { fill: #0f172a; font-weight: 700; font-size: 12.5px; }
+    .sub { fill: #64748b; font-size: 10px; }
+    .mono { fill: #475569; font-size: 10px; font-family: ui-monospace, monospace; }
+    .grp { fill: #64748b; font-weight: 700; font-size: 10.5px; letter-spacing: .05em; }
+    .flow { stroke: #94a3b8; stroke-width: 1.8; fill: none; marker-end: url(#a); }
+    .ah { fill: #94a3b8; }
+    .soon { fill: #b45309; font-size: 9px; font-weight: 700; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #0b1120; } .card { fill: #111827; stroke: #1f2a3c; }
+      .title, .h { fill: #e5edf7; } .sub, .grp { fill: #94a3b8; } .mono { fill: #cbd5e1; }
+      .flow, .ah { stroke: #64748b; fill: #64748b; } .soon { fill: #fbbf24; }
+    }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker>
+    <symbol id="db" viewBox="0 0 48 36"><ellipse cx="24" cy="8" rx="20" ry="6" fill="none" stroke="#64748b" stroke-width="1.4"/><path d="M4 8 v20 a20 6 0 0 0 40 0 v-20" fill="none" stroke="#64748b" stroke-width="1.4"/></symbol>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="960" height="620"/>
+  <text class="title" x="28" y="32">Topologia de deploy — CI/CD, nuvens e dados</text>
+  <text class="sub" x="28" y="50" font-size="10.5">O ambiente decide a nuvem: staging → Vercel (serverless) · production → AWS EC2. A lib publica no npm; a Web consome os dois.</text>
+
+  <!-- SOURCE -->
+  <text class="grp" x="28" y="82">CÓDIGO (GitHub)</text>
+  <rect class="card" x="28" y="92" width="200" height="62" rx="10"/>
+  <text class="h" x="44" y="114">MintlyApi</text>
+  <text class="mono" x="44" y="132">branch staging / main</text>
+  <text class="sub" x="44" y="147">Fastify + Mongo</text>
+
+  <rect class="card" x="244" y="92" width="200" height="62" rx="10"/>
+  <text class="h" x="260" y="114">MintlyLib</text>
+  <text class="mono" x="260" y="132">contratos + clients</text>
+  <text class="sub" x="260" y="147">publicado no npm</text>
+
+  <rect class="card" x="460" y="92" width="200" height="62" rx="10"/>
+  <text class="h" x="476" y="114">MintlyWeb</text>
+  <text class="mono" x="476" y="132">Angular 21</text>
+  <text class="sub" x="476" y="147">consome a API pela lib</text>
+
+  <!-- CI -->
+  <text class="grp" x="28" y="192">CI (GitHub Actions)</text>
+  <rect class="card" x="28" y="202" width="416" height="66" rx="10"/>
+  <rect x="28" y="202" width="6" height="66" rx="3" fill="#22c55e"/>
+  <text class="h" x="48" y="224" fill="#15803d">ci.yml — em PR e push</text>
+  <text class="mono" x="48" y="244">lint · typecheck · test:ci (cov 90%) · build · validate:swagger</text>
+  <text class="sub" x="48" y="260">Lib: auto-version (bump por mensagem de commit) → chama o deploy no merge.</text>
+
+  <line class="flow" x1="128" y1="154" x2="128" y2="200"/>
+  <line class="flow" x1="344" y1="154" x2="240" y2="200"/>
+
+  <!-- DEPLOY -->
+  <text class="grp" x="28" y="306">DEPLOY (workflow_dispatch / auto)</text>
+
+  <!-- Vercel -->
+  <rect class="card" x="28" y="316" width="270" height="118" rx="10"/>
+  <rect x="28" y="316" width="6" height="118" rx="3" fill="#6366f1"/>
+  <text class="h" x="48" y="338" fill="#4f46e5">Vercel — staging</text>
+  <text class="mono" x="48" y="358">branch: staging</text>
+  <text class="sub" x="48" y="376">serverless: api/index.ts (sem listen)</text>
+  <text class="sub" x="48" y="392">app + Mongo montados 1x por cold start;</text>
+  <text class="sub" x="48" y="408">body pré-parseado; ensureConnected reabre</text>
+  <text class="sub" x="48" y="424">a topologia se a função foi congelada.</text>
+
+  <!-- AWS -->
+  <rect class="card" x="314" y="316" width="270" height="118" rx="10"/>
+  <rect x="314" y="316" width="6" height="118" rx="3" fill="#f59e0b"/>
+  <text class="h" x="334" y="338" fill="#b45309">AWS EC2 — production</text>
+  <text class="soon" x="500" y="338">🔜 não pronto</text>
+  <text class="mono" x="334" y="358">branch: main</text>
+  <text class="sub" x="334" y="376">server.ts com listen() (processo longo)</text>
+  <text class="sub" x="334" y="392">parser padrão do Fastify (stream intacto)</text>
+  <text class="sub" x="334" y="424">db:indices roda dentro do job de deploy.</text>
+
+  <!-- npm -->
+  <rect class="card" x="600" y="316" width="332" height="118" rx="10"/>
+  <rect x="600" y="316" width="6" height="118" rx="3" fill="#dc2626"/>
+  <text class="h" x="620" y="338" fill="#b91c1c">npm registry (MintlyLib)</text>
+  <text class="mono" x="620" y="358">staging → dist-tag `preview`</text>
+  <text class="mono" x="620" y="376">main → dist-tag `latest`</text>
+  <text class="sub" x="620" y="396">publicado no merge (auto) ou manual.</text>
+  <text class="sub" x="620" y="416">API e Web instalam `mintly-lib` / `@next`.</text>
+
+  <line class="flow" x1="180" y1="268" x2="160" y2="314"/>
+  <line class="flow" x1="300" y1="268" x2="420" y2="314"/>
+  <line class="flow" x1="344" y1="268" x2="740" y2="314"/>
+
+  <!-- DADOS -->
+  <text class="grp" x="28" y="472">DADOS (MongoDB Atlas — um banco por env)</text>
+  <rect class="card" x="28" y="482" width="556" height="112" rx="10"/>
+  <rect x="28" y="482" width="6" height="112" rx="3" fill="#64748b"/>
+  <g transform="translate(52,502)"><use href="#db" width="48" height="36"/><text class="h" x="58" y="16">app</text><text class="sub" x="58" y="31">config global · valid_environments</text></g>
+  <g transform="translate(52,544)"><use href="#db" width="48" height="36"/><text class="h" x="58" y="16">staging</text><text class="sub" x="58" y="31">dados de staging (Vercel)</text></g>
+  <g transform="translate(320,502)"><use href="#db" width="48" height="36"/><text class="h" x="58" y="16">production</text><text class="sub" x="58" y="31">dados de produção (AWS)</text></g>
+  <text class="sub" x="330" y="580">URI standard (não-SRV): MONGODB_HOSTS + credenciais.</text>
+
+  <!-- consumers -->
+  <rect class="card" x="600" y="482" width="332" height="112" rx="10"/>
+  <rect x="600" y="482" width="6" height="112" rx="3" fill="#0ea5e9"/>
+  <text class="h" x="620" y="504" fill="#0369a1">Consumo em runtime</text>
+  <text class="sub" x="620" y="524">MintlyWeb (Angular) → chama a API via clients da lib</text>
+  <text class="mono" x="620" y="544">Headers: env (banco) + Authorization (JWT)</text>
+  <text class="sub" x="620" y="564">env=staging fala com o deploy Vercel / banco staging;</text>
+  <text class="sub" x="620" y="580">env=production com AWS / banco production.</text>
+
+  <line class="flow" x1="160" y1="434" x2="180" y2="480"/>
+  <line class="flow" x1="440" y1="434" x2="360" y2="480"/>
+</svg>

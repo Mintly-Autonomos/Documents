@@ -59,7 +59,6 @@ Além disso, `sanitizeFilter` remove chaves com operadores Mongo (`$gt`, `$where
 
 ## Pegadinhas e limites
 
-- **`restaurantId` no header é campo morto** — a lib `Headers` não modela mais `restaurantId` (M26): a API o ignora e usa o do JWT.
 - **Índices por banco:** criar um índice não o propaga para os outros envs; rodar `db:indices` em cada um.
 - **Coleções globais** (como `app.valid_environments`) ficam de fora do `withTenant` por design — são compartilhadas entre envs.
 

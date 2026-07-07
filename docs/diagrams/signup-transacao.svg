@@ -96,8 +96,9 @@
 
   <!-- response -->
   <line class="flow" x1="837" y1="280" x2="837" y2="316"/>
-  <rect class="card" x="758" y="320" width="158" height="72" rx="10"/>
-  <text class="h" x="774" y="342">201 Created</text>
-  <text class="sub" x="774" y="362">accessToken +</text>
-  <text class="sub" x="774" y="378">refreshToken + user + restaurant</text>
+  <rect class="card" x="758" y="320" width="158" height="76" rx="10"/>
+  <text class="h" x="774" y="341">201 Created</text>
+  <text class="sub" x="774" y="359">accessToken +</text>
+  <text class="sub" x="774" y="374">refreshToken +</text>
+  <text class="sub" x="774" y="389">user + restaurant</text>
 </svg>

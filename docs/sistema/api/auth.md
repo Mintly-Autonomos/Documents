@@ -23,7 +23,7 @@ verifyPassword(pwd, stored)  // comparação em tempo constante (timingSafeEqual
 
 O cadastro cria **tudo de uma vez** numa transação Mongo: pessoa, restaurante, usuário, a conta "Caixa" padrão, 6 categorias padrão e 4 eventos de auditoria. Se qualquer passo falhar, **nada** é gravado.
 
-![Signup — transação](/files/diagrams/signup-transacao.svg)
+![Signup — transação](/Documents/files/diagrams/signup-transacao.svg)
 
 O **JWT é emitido depois do commit** (M4): a valkyrie persiste o refresh token no store dela, fora do escopo transacional do Mongo — gerar dentro deixaria um token órfão a cada retry da transação. A transação captura os IDs; o `jwt.generate` roda em seguida.
 

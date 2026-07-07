@@ -2,7 +2,7 @@
 
 Este é o **mapa de quem chama quem** dentro da API: qual controller aciona qual use-case, e qual use-case toca qual repository/collection. É a referência para entender o impacto de uma mudança ("se eu mexer no saldo, o que roda?") sem ter que ler todos os arquivos.
 
-![Mapa de domínio: use-cases → collections](/files/diagrams/mapa-de-dominio.svg)
+![Mapa de domínio: use-cases → collections](/Documents/files/diagrams/mapa-de-dominio.svg)
 
 ---
 

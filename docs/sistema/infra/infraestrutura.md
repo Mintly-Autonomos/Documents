@@ -2,7 +2,7 @@
 
 Como o Mintly é buildado, testado, deployado e conectado ao banco. **O ambiente decide a nuvem**: `staging` → Vercel (serverless); `production` → AWS EC2.
 
-![Topologia de deploy](/files/diagrams/topologia-deploy.svg)
+![Topologia de deploy](/Documents/files/diagrams/topologia-deploy.svg)
 
 ---
 

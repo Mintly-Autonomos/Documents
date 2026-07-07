@@ -5,7 +5,7 @@ O Mintly é **multi-tenant**: um mesmo deploy atende vários restaurantes. O iso
 1. **Banco por `env`** — o header `env` seleciona o banco físico (`staging`, `production`, …).
 2. **`restaurantId` por documento** — dentro do banco, cada documento pertence a um restaurante, e toda query é filtrada por ele.
 
-![Multi-tenant híbrido](/files/diagrams/multi-tenant.svg)
+![Multi-tenant híbrido](/Documents/files/diagrams/multi-tenant.svg)
 
 ---
 

@@ -2,7 +2,7 @@
 
 Modelagem **NoSQL idiomática**: sem joins — relações "vivas" por id + **Extended Reference** (snapshots embutidos). Cada `env` é um banco; o `app` é global.
 
-![Coleções e relações](/files/diagrams/colecoes-er.svg)
+![Coleções e relações](/Documents/files/diagrams/colecoes-er.svg)
 
 ---
 

@@ -6,13 +6,13 @@ A API segue um **"Layered Simplified"**: camadas formais e explícitas, mas sem 
 
 ## Contexto — o sistema e seus vizinhos
 
-![Diagrama de contexto](/files/diagrams/contexto.svg)
+![Diagrama de contexto](/Documents/files/diagrams/contexto.svg)
 
 A **MintlyApi** é o núcleo: recebe chamadas da **MintlyWeb** (Angular), valida/aplica regra, persiste no **MongoDB Atlas** (banco por `env`), e usa **valkyrie-jwt** (sessão) e **Gmail** (e-mail) como serviços de apoio. Web e API dependem do **mesmo pacote de contratos** (`mintly-lib`), o que mantém os dois lados em sincronia.
 
 ## Camadas internas
 
-![Arquitetura em camadas](/files/diagrams/arquitetura-camadas.svg)
+![Arquitetura em camadas](/Documents/files/diagrams/arquitetura-camadas.svg)
 
 ---
 

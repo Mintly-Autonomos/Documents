@@ -2,7 +2,7 @@
 
 Dinheiro em software é onde float mata. O Mintly usa **duas representações** e nunca deixa float chegar perto de um total.
 
-![Modelo de dinheiro](/files/diagrams/dinheiro.svg)
+![Modelo de dinheiro](/Documents/files/diagrams/dinheiro.svg)
 
 ---
 

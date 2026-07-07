@@ -27,14 +27,16 @@ Duas observações que quebram o fluxo "puro" e valem destaque:
 
 ### Auth (`/auth`) — `AuthController`
 
-| Rota | Use-case | Repositories | Collections | Externo | Tx |
-|---|---|---|---|---|---|
-| `POST /signup` | `RegisterUseCase` | — (collections diretas) | `users`, `people`, `restaurants`, `financial_accounts`, `financial_categories`, `audit_logs` | valkyrie-jwt (pós-commit) | ⚡ |
-| `POST /login` | `AuthUseCase.login` | `AuthRepository` | `users`, `audit_logs` | valkyrie-jwt · audit | — |
-| `POST /refresh` | `AuthUseCase.refresh` | `AuthRepository` (findById) | `users` | valkyrie-jwt | — |
-| `POST /logout` | `AuthUseCase.logout` | — | `audit_logs` | valkyrie-jwt · audit | — |
-| `POST /forgot-password` | `PasswordRecoveryUseCase.requestRecovery` | `AuthRepository`, `PasswordResetRepository` | `users`, `password_reset_tokens`, `audit_logs` | email-service | — |
-| `POST /reset-password` | `PasswordRecoveryUseCase.resetPassword` | `AuthRepository`, `PasswordResetRepository` | `users`, `password_reset_tokens`, `audit_logs` | valkyrie-jwt (revoga sessões) | — |
+*(as collections tocadas estão no diagrama do topo)*
+
+| Rota | Use-case | Repository | Externo | Tx |
+|---|---|---|---|---|
+| `POST /signup` | `RegisterUseCase` | — (collections diretas) | valkyrie-jwt (pós-commit) | ⚡ |
+| `POST /login` | `AuthUseCase.login` | `AuthRepository` | valkyrie · audit | — |
+| `POST /refresh` | `AuthUseCase.refresh` | `AuthRepository` | valkyrie | — |
+| `POST /logout` | `AuthUseCase.logout` | — | valkyrie · audit | — |
+| `POST /forgot-password` | `PasswordRecoveryUseCase.requestRecovery` | `Auth` + `PasswordResetRepository` | email | — |
+| `POST /reset-password` | `PasswordRecoveryUseCase.resetPassword` | `Auth` + `PasswordResetRepository` | valkyrie | — |
 
 > **`RegisterUseCase`** faz person + restaurant + user + conta "Caixa" padrão + 6 categorias + 4 eventos de auditoria numa **única transação**; o `jwt.generate` roda **depois** do commit (senão deixaria refresh token órfão em retry).
 
@@ -70,36 +72,21 @@ Person é o único CRUD **completo** exposto (a rota `/people` tem GET/:id e DEL
 
 Não estende `CrudController`: os corpos são dedicados (`accountId`/`categoryId`, não os snapshots) e **todo** use-case roda em transação, ajustando o saldo da conta no mesmo commit.
 
-| Rota | Use-case | Repository | Collections | Tx |
-|---|---|---|---|---|
-| `POST /` | `RegisterMovementUseCase` | `FinancialMovementRepository` (findDuplicate) | `financial_movements`, `financial_accounts`, `financial_categories` | ⚡ |
-| `PATCH /:id` | `UpdateMovementUseCase` | — (collections diretas) | `financial_movements`, `financial_accounts`, `financial_categories` | ⚡ |
-| `PATCH /:id/status` | `ChangeMovementStatusUseCase` | — | `financial_movements`, `financial_accounts` | ⚡ |
-| `GET /` | `FinancialMovementRepository.findAll` + `.count` | `FinancialMovementRepository` | `financial_movements` | — |
-| `POST /recompute-balances` | `RecomputeBalancesUseCase` | — | `financial_movements`, `financial_accounts` | ⚡ |
+| Rota | Use-case | Repository | Tx |
+|---|---|---|---|
+| `POST /` | `RegisterMovementUseCase` | `FinancialMovementRepository` (findDuplicate) | ⚡ |
+| `PATCH /:id` | `UpdateMovementUseCase` | — (collections diretas) | ⚡ |
+| `PATCH /:id/status` | `ChangeMovementStatusUseCase` | — | ⚡ |
+| `GET /` | `FinancialMovementRepository` (findAll + count) | — | — |
+| `POST /recompute-balances` | `RecomputeBalancesUseCase` | — | ⚡ |
 
 > **Correção de saldo** (register/update/changeStatus): calcula o `BalanceImpact` (bucket + delta), reverte o efeito antigo e aplica o novo via `applyBalanceImpact` (`$inc` Decimal128 escopado por `restaurantId`). Ver [Modelo de dinheiro](./dinheiro.md).
 
 ---
 
-## Matriz use-case × collection (resumo)
+## Matriz use-case × collection
 
-| Use-case | users | people | rest. | fin_accounts | fin_categories | fin_movements | audit | reset_tokens |
-|---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-| RegisterUseCase ⚡ | ✏️ | ✏️ | ✏️ | ✏️ | ✏️ | | ✏️ | |
-| AuthUseCase.login | ✏️ | | | | | | ✏️ | |
-| AuthUseCase.refresh | 👁️ | | | | | | | |
-| PasswordRecovery.request | 👁️ | | | | | | ✏️ | ✏️ |
-| PasswordRecovery.reset | ✏️ | | | | | | ✏️ | ✏️ |
-| Person CRUD | | ✏️ | | | | | | |
-| Account CRUD / SetDefault ⚡ / Inactivate ⚡ | | | | ✏️ | | | | |
-| Category CRUD / Inactivate / Suggest | | | | | ✏️ | | | |
-| RegisterMovement ⚡ | | | | ✏️ | 👁️ | ✏️ | | |
-| UpdateMovement ⚡ | | | | ✏️ | 👁️ | ✏️ | | |
-| ChangeMovementStatus ⚡ | | | | ✏️ | | ✏️ | | |
-| RecomputeBalances ⚡ | | | | ✏️ | | 👁️ | | |
-
-✏️ = escreve · 👁️ = só lê · ⚡ = transação. (`valkyrie_*` é infra do JWT, gerida pela lib valkyrie.)
+Essa matriz é exatamente o **diagrama no topo desta página** — cada card mostra quais collections o use-case escreve, com o badge ⚡ nos transacionais. (`valkyrie_*` é infra do JWT, gerida pela lib valkyrie; não aparece como collection de domínio.)
 
 ---
 

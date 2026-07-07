@@ -4,6 +4,14 @@
 
 A API segue um **"Layered Simplified"**: camadas formais e explícitas, mas sem cerimônia — CRUD trivial reaproveita uma base genérica; regra de negócio ganha use-case dedicado.
 
+## Contexto — o sistema e seus vizinhos
+
+![Diagrama de contexto](/files/diagrams/contexto.svg)
+
+A **MintlyApi** é o núcleo: recebe chamadas da **MintlyWeb** (Angular), valida/aplica regra, persiste no **MongoDB Atlas** (banco por `env`), e usa **valkyrie-jwt** (sessão) e **Gmail** (e-mail) como serviços de apoio. Web e API dependem do **mesmo pacote de contratos** (`mintly-lib`), o que mantém os dois lados em sincronia.
+
+## Camadas internas
+
 ![Arquitetura em camadas](/files/diagrams/arquitetura-camadas.svg)
 
 ---
@@ -98,6 +106,7 @@ JWT criptografado (AES-256-GCM via valkyrie-jwt), **access token 15 min + refres
 - [Mapa de domínio](./mapa-de-dominio.md) — quem chama quem.
 - [Multi-tenant](./multi-tenant.md) — banco-por-env + restaurantId.
 - [Modelo de dinheiro](./dinheiro.md) — Decimal128, buckets, `$inc`.
+- [Movimentações](./movimento.md) — registro transacional + ciclo de status.
 - [Auth & sessão](./auth.md) — scrypt, lockout, rotação, recovery.
 - [CRUD genérico](./crud-generico.md) — como a base funciona.
 - [Coleções & índices](./colecoes.md) · [Erros & validação](./erros.md)

@@ -1,0 +1,103 @@
+<svg viewBox="0 0 940 470" xmlns="http://www.w3.org/2000/svg" font-family="Inter, Segoe UI, system-ui, sans-serif" role="img" aria-label="Transação de signup da MintlyApi">
+  <style>
+    .bg { fill: #ffffff; } .card { fill: #f8fafc; stroke: #e2e8f0; stroke-width: 1; }
+    .title { fill: #0f172a; font-weight: 700; font-size: 15px; }
+    .h { fill: #0f172a; font-weight: 700; font-size: 12.5px; }
+    .sub { fill: #64748b; font-size: 10.5px; }
+    .mono { fill: #475569; font-size: 10.5px; font-family: ui-monospace, monospace; }
+    .flow { stroke: #94a3b8; stroke-width: 2; fill: none; marker-end: url(#a); }
+    .ah { fill: #94a3b8; }
+    .txbox { fill: #ecfdf5; stroke: #10b981; stroke-width: 1.6; stroke-dasharray: 6 4; }
+    .step { fill: #ffffff; stroke: #d1fae5; stroke-width: 1; }
+    .stepn { fill: #059669; font-size: 10px; font-weight: 800; }
+    .stept { fill: #0f172a; font-size: 10.5px; font-weight: 600; }
+    .stepc { fill: #64748b; font-size: 9px; font-family: ui-monospace, monospace; }
+    .jwt { fill: #eef2ff; stroke: #6366f1; stroke-width: 1.4; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #0b1120; } .card { fill: #111827; stroke: #1f2a3c; }
+      .title, .h, .stept { fill: #e5edf7; } .sub, .stepc { fill: #94a3b8; } .mono { fill: #cbd5e1; }
+      .flow, .ah { stroke: #64748b; fill: #64748b; }
+      .txbox { fill: #0c2a20; stroke: #10b981; } .step { fill: #0f2b22; stroke: #14532d; } .stepn { fill: #34d399; }
+      .jwt { fill: #1e1b3a; stroke: #818cf8; }
+    }
+  </style>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+
+  <rect class="bg" x="0" y="0" width="940" height="470"/>
+  <text class="title" x="28" y="32">Signup — onboarding em uma transação (tudo ou nada)</text>
+  <text class="sub" x="28" y="51">Cria a conta e todo o onboarding atomicamente; o JWT é emitido só DEPOIS do commit (senão sobraria token órfão em retry).</text>
+
+  <!-- request -->
+  <rect class="card" x="28" y="78" width="150" height="120" rx="10"/>
+  <text class="h" x="44" y="100">POST</text>
+  <text class="mono" x="44" y="118">/auth/signup</text>
+  <text class="sub" x="44" y="140">person · email</text>
+  <text class="sub" x="44" y="156">password</text>
+  <text class="sub" x="44" y="172">restaurantName</text>
+  <text class="sub" x="44" y="188">termsAccepted</text>
+
+  <line class="flow" x1="178" y1="138" x2="206" y2="138"/>
+
+  <!-- transaction box -->
+  <rect class="txbox" x="212" y="70" width="512" height="330" rx="12"/>
+  <text class="h" x="230" y="94" fill="#059669">session.withTransaction — atômico</text>
+  <text class="sub" x="230" y="110">se qualquer passo falhar, NADA é gravado (rollback)</text>
+
+  <!-- steps grid 2 cols -->
+  <g>
+    <rect class="step" x="230" y="124" width="228" height="42" rx="7"/>
+    <text class="stepn" x="242" y="142">0</text><text class="stept" x="262" y="142">e-mail único?</text>
+    <text class="stepc" x="262" y="157">findOne(users) — 409 se existe</text>
+
+    <rect class="step" x="230" y="174" width="228" height="42" rx="7"/>
+    <text class="stepn" x="242" y="192">1</text><text class="stept" x="262" y="192">person</text>
+    <text class="stepc" x="262" y="207">insert(people)</text>
+
+    <rect class="step" x="230" y="224" width="228" height="42" rx="7"/>
+    <text class="stepn" x="242" y="242">2</text><text class="stept" x="262" y="242">restaurant</text>
+    <text class="stepc" x="262" y="257">insert(restaurants)</text>
+
+    <rect class="step" x="230" y="274" width="228" height="42" rx="7"/>
+    <text class="stepn" x="242" y="292">3</text><text class="stept" x="262" y="292">user (owner, active)</text>
+    <text class="stepc" x="262" y="307">insert(users) — hash scrypt</text>
+
+    <rect class="step" x="478" y="124" width="228" height="42" rx="7"/>
+    <text class="stepn" x="490" y="142">4</text><text class="stept" x="510" y="142">conta "Caixa" (padrão)</text>
+    <text class="stepc" x="510" y="157">insert(financial_accounts)</text>
+
+    <rect class="step" x="478" y="174" width="228" height="42" rx="7"/>
+    <text class="stepn" x="490" y="192">5</text><text class="stept" x="510" y="192">6 categorias padrão</text>
+    <text class="stepc" x="510" y="207">insertMany(financial_categories)</text>
+
+    <rect class="step" x="478" y="224" width="228" height="42" rx="7"/>
+    <text class="stepn" x="490" y="242">6</text><text class="stept" x="510" y="242">4 eventos de auditoria</text>
+    <text class="stepc" x="510" y="257">insertMany(audit_logs)</text>
+
+    <rect class="step" x="478" y="274" width="228" height="42" rx="7" stroke="#22c55e"/>
+    <text class="stepn" x="490" y="296" font-size="12">✓</text><text class="stept" x="510" y="296">COMMIT</text>
+    <text class="stepc" x="510" y="308" fill="#059669">tudo persistido de uma vez</text>
+  </g>
+  <text class="sub" x="230" y="340">Use-cases transacionais escrevem nas collections direto (mesma ClientSession, fora do CRUD genérico).</text>
+  <text class="sub" x="230" y="358">A auditoria normaliza o e-mail e grava status=active nos claims (o token do cadastro já vem completo).</text>
+  <text class="sub" x="230" y="382" font-style="italic">captura userId / restaurantId / audit para o passo seguinte ↓</text>
+
+  <line class="flow" x1="724" y1="200" x2="752" y2="200"/>
+
+  <!-- JWT post-commit -->
+  <rect class="jwt" x="758" y="120" width="158" height="160" rx="11"/>
+  <text class="h" x="774" y="144" fill="#4f46e5">JWT (pós-commit)</text>
+  <text class="sub" x="774" y="164">FORA da transação:</text>
+  <text class="sub" x="774" y="180">valkyrie persiste o</text>
+  <text class="sub" x="774" y="196">refresh no store dele.</text>
+  <text class="mono" x="774" y="218">jwt.generate()</text>
+  <text class="sub" x="774" y="240">se gerasse dentro,</text>
+  <text class="sub" x="774" y="256">um retry deixaria</text>
+  <text class="sub" x="774" y="272">token órfão (M4).</text>
+
+  <!-- response -->
+  <line class="flow" x1="837" y1="280" x2="837" y2="316"/>
+  <rect class="card" x="758" y="320" width="158" height="72" rx="10"/>
+  <text class="h" x="774" y="342">201 Created</text>
+  <text class="sub" x="774" y="362">accessToken +</text>
+  <text class="sub" x="774" y="378">refreshToken + user + restaurant</text>
+</svg>

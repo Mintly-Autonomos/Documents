@@ -2,6 +2,7 @@
 import type { FolderNode } from '../../lib/content-tree'
 import { ghNew } from '../../lib/github-links'
 import { kindLabel } from '../../lib/icons'
+import NewFolder from '../NewFolder.astro'
 interface Props { node: FolderNode, repo: string }
 const { node, repo } = Astro.props
 const base = import.meta.env.BASE_URL
@@ -12,7 +13,10 @@ const countLabel = `${node.children.length} ite${node.children.length === 1 ? 'm
     <p class="kicker" style="margin:0 0 6px;">Pasta</p>
     <h1 style="margin:0;font-size:2rem;">{node.name || 'Documentos'}</h1>
   </div>
-  <a class="btn" href={ghNew(repo, node.path)} target="_blank" rel="noopener">Novo documento ↗</a>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+    <NewFolder repo={repo} parentPath={node.path} />
+    <a class="btn" href={ghNew(repo, node.path)} target="_blank" rel="noopener">Novo documento ↗</a>
+  </div>
 </header>
 <p class="meta" style="margin:10px 0 0;">{countLabel}</p>
 

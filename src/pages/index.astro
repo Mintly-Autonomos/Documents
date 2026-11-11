@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 import { buildContentTree, type FolderNode } from '../lib/content-tree'
 import { flattenFiles } from '../lib/search-index'
 import { topLevelSections } from '../lib/landing'
+import NewFolder from '../components/NewFolder.astro'
 
 const DOCS_DIR = fileURLToPath(new URL('../../docs', import.meta.url))
 const tree = buildContentTree(DOCS_DIR)
@@ -36,6 +37,7 @@ const latestRelease = releasesFolder?.children
       </p>
       <div class="hero__actions rise rise-4">
         <a class="btn" href={`${base}/buscar`}>Buscar nos documentos</a>
+        <NewFolder repo="Mintly-Autonomos/Documents" parentPath="" align="left" />
         <span class="meta">ou pressione ⌘K em qualquer página</span>
       </div>
       <p class="meta hero__masthead rise rise-4">

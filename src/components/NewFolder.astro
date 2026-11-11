@@ -1,0 +1,78 @@
+---
+// "Nova pasta": a pessoa digita o nome e vai pro editor do GitHub já com
+// `<pasta-atual>/<nome>/README.md` preenchido (git não guarda pasta vazia).
+interface Props { repo: string, parentPath: string, align?: 'left' | 'right' }
+const { repo, parentPath, align = 'right' } = Astro.props
+const where = parentPath ? `docs/${parentPath}/` : 'docs/'
+---
+<details class={`new-folder new-folder--${align}`}>
+  <summary class="btn btn--ghost">Nova pasta</summary>
+  <form class="new-folder__form" data-new-folder data-repo={repo} data-parent={parentPath}>
+    <label class="meta" for={`nf-${parentPath || 'root'}`}>Criar em <code>{where}</code></label>
+    <div class="new-folder__row">
+      <input
+        id={`nf-${parentPath || 'root'}`}
+        name="name"
+        type="text"
+        required
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="nome-da-pasta (ou pasta/subpasta)"
+      />
+      <button class="btn" type="submit">Criar no GitHub ↗</button>
+    </div>
+    <p class="meta new-folder__hint">Abre o GitHub com um <code>README.md</code> dentro da pasta nova — é só fazer o commit.</p>
+    <p class="new-folder__error" role="alert" hidden>Nome inválido.</p>
+  </form>
+</details>
+
+<script>
+  import { ghNewFolder, normalizeFolderName } from '../lib/github-links'
+
+  document.querySelectorAll<HTMLFormElement>('form[data-new-folder]').forEach((form) => {
+    const input = form.querySelector('input') as HTMLInputElement
+    const error = form.querySelector('.new-folder__error') as HTMLElement
+    const details = form.closest('details')
+    details?.addEventListener('toggle', () => { if (details.open) input.focus() })
+    input.addEventListener('input', () => { error.hidden = true })
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      if (!normalizeFolderName(input.value)) { error.hidden = false; input.focus(); return }
+      const url = ghNewFolder(form.dataset.repo ?? '', form.dataset.parent ?? '', input.value)
+      window.open(url, '_blank', 'noopener')
+      input.value = ''
+      if (details) details.open = false
+    })
+  })
+</script>
+
+<style>
+  .new-folder { position: relative; }
+  .new-folder summary { list-style: none; cursor: pointer; }
+  .new-folder summary::-webkit-details-marker { display: none; }
+  .new-folder[open] summary { border-color: var(--foreground); color: var(--foreground); }
+
+  .new-folder__form {
+    position: absolute; top: calc(100% + 8px); z-index: 20;
+    width: min(440px, calc(100vw - 32px));
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 14px;
+    background: var(--background);
+    border: 1px solid var(--foreground);
+    border-radius: var(--radius);
+  }
+  .new-folder--right .new-folder__form { right: 0; }
+  .new-folder--left .new-folder__form { left: 0; }
+  .new-folder__row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .new-folder__row input {
+    flex: 1 1 180px; min-width: 0;
+    padding: 7px 10px;
+    font: inherit; font-family: var(--font-mono); font-size: 13px;
+    color: var(--foreground); background: transparent;
+    border: 1px solid var(--hairline); border-radius: var(--radius);
+  }
+  .new-folder__row input:focus { outline: none; border-color: var(--ink-green); }
+  .new-folder__hint { margin: 0; }
+  .new-folder__error { margin: 0; color: #c0392b; font-size: 13px; }
+</style>

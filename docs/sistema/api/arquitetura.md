@@ -55,7 +55,7 @@ Um único objeto é passado **explicitamente** da rota até o banco (sem singlet
 interface RequestContext { env: string; userId?: string; restaurantId?: string }
 ```
 
-- **`env`** (header `env`): roteia o **banco** (`getDatabase(env)` → `client.db(env)`). É validado contra a allowlist `app.valid_environments` (rejeita ambiente desconhecido com `APP-0004`). Ver [Multi-tenant](./multi-tenant.md).
+- **`env`** (header `env`): roteia o **banco** (`getDatabase(env)` → `client.db(env)`). É validado contra a allowlist `app.valid_environments` (rejeita ambiente desconhecido com `APP-0004`). Ver [Multi-tenant](../base-de-dados/multi-tenant.md).
 - **`userId` / `restaurantId`**: extraídos **do JWT validado** pelo hook `verifyJwt`, nunca de header do cliente. `buildRequestContext(request)` os lê dos claims.
 - **`withTenant(filter, ctx)`** injeta `restaurantId` em **toda** operação da base — é o que garante o isolamento multi-tenant (fecha o IDOR). `requireTenant(ctx)` falha fechado (401) se a rota não passou pelo hook.
 
@@ -130,10 +130,10 @@ JWT criptografado (AES-256-GCM via valkyrie-jwt), **access token 15 min + refres
 ## O que ler a seguir
 
 - [Mapa de domínio](./mapa-de-dominio.md) — quem chama quem.
-- [Multi-tenant](./multi-tenant.md) — banco-por-env + restaurantId.
+- [Multi-tenant](../base-de-dados/multi-tenant.md) — banco-por-env + restaurantId.
 - [Modelo de dinheiro](./dinheiro.md) — Decimal128, buckets, `$inc`.
 - [Movimentações](./movimento.md) — registro transacional, ciclo de status, liquidação, importação.
 - [Auth & sessão](./auth.md) — scrypt, lockout, rotação, recovery, conta e funcionários.
 - [CRUD genérico](./crud-generico.md) — como a base funciona.
-- [Coleções & índices](./colecoes.md) · [Atributos das coleções](../base-de-dados/colecoes-atributos.md) · [Erros & validação](./erros.md)
+- [Coleções & índices](../base-de-dados/colecoes.md) · [Atributos das coleções](../base-de-dados/colecoes-atributos.md) · [Erros & validação](./erros.md)
 - [Referência de rotas](./mintly-api.md) — todas as rotas e envelopes.

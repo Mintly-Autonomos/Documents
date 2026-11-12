@@ -66,4 +66,4 @@ CrudController<T>  →  CrudUseCase<T>  →  MongodbCrudRepository<T>  →  Mong
 - `mongo:pipeline` → `aggregate(pipeline)`;
 - qualquer outro → `UnsupportedQueryKindError` (`APP-0002`).
 
-Ver também: [Arquitetura](./arquitetura.md) · [Multi-tenant](./multi-tenant.md) · [Erros & validação](./erros.md).
+Ver também: [Arquitetura](./arquitetura.md) · [Multi-tenant](../base-de-dados/multi-tenant.md) · [Erros & validação](./erros.md).

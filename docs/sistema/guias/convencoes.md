@@ -34,7 +34,7 @@ feat(auth): contexto multi-tenant populado a partir do JWT (MIN-59)
 
 - **Código em inglês** (nomes de negócio do Jira em PT são traduzidos: `restaurante_id` → `restaurantId`).
 - **Campos**: `camelCase` (`restaurantId`, `passwordHash`, `feePercent`, `isDefault`).
-- **Collections do Mongo**: `snake_case` **plural** (`users`, `people`, `restaurants`, `financial_movements`, `menu_items`, `payments`, `audit_logs`…). Lista completa em [Coleções & índices](../api/colecoes.md).
+- **Collections do Mongo**: `snake_case` **plural** (`users`, `people`, `restaurants`, `financial_movements`, `menu_items`, `payments`, `audit_logs`…). Lista completa em [Coleções & índices](../base-de-dados/colecoes.md).
 - **Schemas** (variáveis TS): `camelCase` com sufixo `Schema` (`personSchema`, `financialAccountSchema`).
 - **Arquivos**: `kebab-case` (`auth-use-case.ts`, `password-reset-repository.ts`).
 - **Rotas HTTP**: inglês, kebab-case (`/auth/forgot-password`, `/financial-movements/recompute-balances`). Recursos do usuário/restaurante logado usam `/me` (`/users/me`, `/restaurants/me/members`) — o id vem do token, nunca da URL.

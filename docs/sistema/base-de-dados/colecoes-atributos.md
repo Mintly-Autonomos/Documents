@@ -1,6 +1,6 @@
 # 🧬 Base de dados — atributos das coleções
 
-> Cada coleção com o tipo de cada campo e um exemplo de preenchimento. Para papel, escopo e índices, ver [Coleções & índices](../api/colecoes.md).
+> Cada coleção com o tipo de cada campo e um exemplo de preenchimento. Para papel, escopo e índices, ver [Coleções & índices](./colecoes.md).
 >
 > Atualizado em 12/11/2026 a partir do **`origin/staging`** dos dois repositórios:
 > - **MintlyLib** `2.27.0-preview`: schemas Sapphire em `src/core/data/**`

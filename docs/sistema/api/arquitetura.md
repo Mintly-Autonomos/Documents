@@ -135,5 +135,5 @@ JWT criptografado (AES-256-GCM via valkyrie-jwt), **access token 15 min + refres
 - [Movimentações](./movimento.md) — registro transacional, ciclo de status, liquidação, importação.
 - [Auth & sessão](./auth.md) — scrypt, lockout, rotação, recovery, conta e funcionários.
 - [CRUD genérico](./crud-generico.md) — como a base funciona.
-- [Coleções & índices](./colecoes.md) · [Atributos das coleções](./colecoes-atributos.md) · [Erros & validação](./erros.md)
+- [Coleções & índices](./colecoes.md) · [Atributos das coleções](../base-de-dados/colecoes-atributos.md) · [Erros & validação](./erros.md)
 - [Referência de rotas](./mintly-api.md) — todas as rotas e envelopes.

@@ -2,7 +2,7 @@
 
 O domínio mais complexo: cada movimentação (entrada/saída) é **transacional** e ajusta o saldo da conta no mesmo commit. Não usa o CRUD genérico — corpos e regras são dedicados. As regras puras ficam em `movement-rules.ts` (testáveis sem banco).
 
-Ver também: [Modelo de dinheiro](./dinheiro.md) (buckets, `$inc`) · [Mapa de domínio](./mapa-de-dominio.md) · [Atributos de `financial_movements`](./colecoes-atributos.md#financial_movements).
+Ver também: [Modelo de dinheiro](./dinheiro.md) (buckets, `$inc`) · [Mapa de domínio](./mapa-de-dominio.md) · [Atributos de `financial_movements`](../base-de-dados/colecoes-atributos.md#financial_movements).
 
 ---
 

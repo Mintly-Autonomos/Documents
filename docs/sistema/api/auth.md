@@ -72,7 +72,7 @@ Envs: `MAX_LOGIN_ATTEMPTS` (5), `BLOCK_DURATION_MINUTES` (15).
 ## Sessão — JWT com rotação
 
 - **valkyrie-jwt**: access token criptografado (AES-256-GCM), **15 min**; refresh token **7 dias** com **rotação** — cada refresh emite um par novo e o refresh antigo é invalidado. Reuso de um refresh já rotacionado é detectado e a família é negada.
-- Os refresh tokens vivem em `valkyrie_refresh_tokens`; as chaves de assinatura em `valkyrie_signing_keys`; a trilha técnica de tokens em `valkyrie_audit_events`. Ver [Atributos das coleções](./colecoes-atributos.md).
+- Os refresh tokens vivem em `valkyrie_refresh_tokens`; as chaves de assinatura em `valkyrie_signing_keys`; a trilha técnica de tokens em `valkyrie_audit_events`. Ver [Atributos das coleções](../base-de-dados/colecoes-atributos.md).
 
 ### Refresh — reconsulta o usuário (C5)
 

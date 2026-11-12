@@ -12,7 +12,7 @@ Biblioteca de autenticação por JWT criptografado, com rotação de refresh tok
 - Emite um **access token** (curto, 15 min) + **refresh token** (longo, 7 dias).
 - Tokens **criptografados** (AES-256-GCM) — não é um JWT assinado "aberto", o payload não é legível sem a chave.
 - **Rotação**: cada `refresh` emite um par novo e invalida o refresh anterior; reuso de um refresh já rotacionado é detectado e a família é negada.
-- Persiste tudo no banco do `env` (`createMongoStores`): **`valkyrie_signing_keys`** (chaves que assinam/criptografam, com rotação), **`valkyrie_refresh_tokens`** (sessões, agrupadas por família) e **`valkyrie_audit_events`** (`token.issued`, `token.validated`, `token.rejected`, `key.rotated`). Formato em [Atributos das coleções](../api/colecoes-atributos.md#valkyrie_signing_keys).
+- Persiste tudo no banco do `env` (`createMongoStores`): **`valkyrie_signing_keys`** (chaves que assinam/criptografam, com rotação), **`valkyrie_refresh_tokens`** (sessões, agrupadas por família) e **`valkyrie_audit_events`** (`token.issued`, `token.validated`, `token.rejected`, `key.rotated`). Formato em [Atributos das coleções](../base-de-dados/colecoes-atributos.md#valkyrie_signing_keys).
 
 ### Como a API usa
 Um serviço **por `env`** (o banco é por ambiente):

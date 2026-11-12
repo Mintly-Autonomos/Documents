@@ -31,7 +31,7 @@ Schemas em [`@ascendance-hub/sapphire-core`](https://www.npmjs.com/package/@asce
 | `request/` | `Headers`, `PaginationDto` / `FindAllRequestDto`, `ResponseDto` (envelope) |
 | `api/` | `Entity` (base com `_id`) |
 
-Os atributos de cada coleção que esses schemas descrevem estão em [Atributos das coleções](../api/colecoes-atributos.md).
+Os atributos de cada coleção que esses schemas descrevem estão em [Atributos das coleções](../base-de-dados/colecoes-atributos.md).
 
 ### Financeiro — união discriminada
 

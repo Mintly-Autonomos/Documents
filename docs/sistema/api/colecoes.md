@@ -2,7 +2,7 @@
 
 Modelagem **NoSQL idiomática**: sem joins — relações "vivas" por id + **Extended Reference** (snapshots embutidos). Cada `env` é um banco; o `app` é global.
 
-> Os **atributos e tipos** de cada coleção estão em [Atributos das coleções](./colecoes-atributos.md).
+> Os **atributos e tipos** de cada coleção estão em [Atributos das coleções](../base-de-dados/colecoes-atributos.md).
 
 ![Coleções e relações](/Documents/files/diagrams/colecoes-er.svg)
 
@@ -121,4 +121,4 @@ Cada evento guarda `userId`, `restaurantId`, `data` e `createdAt`. Escrita via `
 - `npm run db:seed-demo` — restaurante de demonstração.
 - `npm run db:settle` — liquidação automática (ver [Movimentações](./movimento.md)).
 
-Ver também: [Atributos das coleções](./colecoes-atributos.md) · [Multi-tenant](./multi-tenant.md) · [Modelo de dinheiro](./dinheiro.md) · [mintly-lib](../libs/mintly-lib.md).
+Ver também: [Atributos das coleções](../base-de-dados/colecoes-atributos.md) · [Multi-tenant](./multi-tenant.md) · [Modelo de dinheiro](./dinheiro.md) · [mintly-lib](../libs/mintly-lib.md).

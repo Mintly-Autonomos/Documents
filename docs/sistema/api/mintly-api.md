@@ -4,7 +4,7 @@
 
 Swagger vivo em `/documentation` (só **fora de produção**).
 
-> **Documentação profunda:** [Arquitetura](./arquitetura.md) · [Mapa de domínio](./mapa-de-dominio.md) · [Multi-tenant](./multi-tenant.md) · [Modelo de dinheiro](./dinheiro.md) · [Movimentações](./movimento.md) · [Auth & sessão](./auth.md) · [CRUD genérico](./crud-generico.md) · [Coleções & índices](./colecoes.md) · [Atributos das coleções](./colecoes-atributos.md) · [Erros & validação](./erros.md).
+> **Documentação profunda:** [Arquitetura](./arquitetura.md) · [Mapa de domínio](./mapa-de-dominio.md) · [Multi-tenant](./multi-tenant.md) · [Modelo de dinheiro](./dinheiro.md) · [Movimentações](./movimento.md) · [Auth & sessão](./auth.md) · [CRUD genérico](./crud-generico.md) · [Coleções & índices](./colecoes.md) · [Atributos das coleções](../base-de-dados/colecoes-atributos.md) · [Erros & validação](./erros.md).
 
 ---
 

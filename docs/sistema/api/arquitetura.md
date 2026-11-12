@@ -136,4 +136,6 @@ JWT criptografado (AES-256-GCM via valkyrie-jwt), **access token 15 min + refres
 - [Auth & sessão](./auth.md) — scrypt, lockout, rotação, recovery, conta e funcionários.
 - [CRUD genérico](./crud-generico.md) — como a base funciona.
 - [Coleções & índices](../base-de-dados/colecoes.md) · [Atributos das coleções](../base-de-dados/colecoes-atributos.md) · [Erros & validação](./erros.md)
+- [Assinatura e pagamentos](./assinatura-e-pagamentos.md) · [Relatórios e métricas](./relatorios-e-metricas.md) · [Perfil tributário](./perfil-tributario.md) · [IA](./ia.md)
+- [Workers](../workers/workers.md) — coleta de dados externos.
 - [Referência de rotas](./mintly-api.md) — todas as rotas e envelopes.

@@ -14,7 +14,8 @@ O Mintly é **multi-tenant**: um mesmo deploy atende vários restaurantes. O iso
 `getDatabase(env)` faz `client.db(env)` — cada `env` é um **banco físico separado** no mesmo cluster Atlas. `staging` e `production` não se enxergam: o isolamento é no nível do banco.
 
 - **De onde vem:** o header `env` (cliente). É o único dado de roteamento que vem de header.
-- **Validação (C2):** um hook `onRequest` chama `assertValidEnv(env)`, que confere o `env` contra a allowlist em **`app.valid_environments`** (o banco `app` é compartilhado, fixo no código). `env` fora da allowlist → **`APP-0004` (400)**. Ausente → `APP-0003`.
+- **Validação (C2):** um hook `onRequest` chama `assertValidEnv(env)`, que confere o `env` contra a allowlist em **`app.valid_environments`** (o banco `app` é compartilhado, fixo no código; a lista fica em cache por 1 minuto). `env` fora da allowlist → **`APP-0004` (400)**. Ausente → `APP-0003`.
+- **Webhook:** o Mercado Pago não manda header, então o `env` vai na query (`POST /webhooks/mercadopago?env=staging`).
 - **Permissivo em dev/testes:** quando a allowlist está vazia (ninguém seedou o `app`), a validação não bloqueia — por isso os testes de integração usam envs arbitrários (`inttest_*`) sem problema. `npm run db:seed-envs` insere `staging`/`production` e **ativa** a proteção.
 
 ```ts
@@ -60,6 +61,8 @@ Além disso, `sanitizeFilter` remove chaves com operadores Mongo (`$gt`, `$where
 ## Pegadinhas e limites
 
 - **Índices por banco:** criar um índice não o propaga para os outros envs; rodar `db:indices` em cada um.
-- **Coleções globais** (como `app.valid_environments`) ficam de fora do `withTenant` por design — são compartilhadas entre envs.
+- **Coleções globais** do banco `app` — `valid_environments` (allowlist) e `tax_settings` (DAS do MEI vigente) — ficam de fora do `withTenant` por design: são compartilhadas entre envs.
+- **Liquidação automática é cross-tenant de propósito:** o `SettleDueMovementsUseCase` roda fora de request, recebe só o `env` e varre os movimentos de todos os restaurantes numa query. É a única operação sem `restaurantId` no contexto; as escritas continuam filtradas pelo `restaurantId` de cada documento. Ver [Movimentações](./movimento.md).
+- **Coleções `valkyrie_*`** usam `tenantId: "mintly"` fixo: o isolamento da sessão entre ambientes vem do banco, não desse campo.
 
 Ver também: [Arquitetura](./arquitetura.md) · [CRUD genérico](./crud-generico.md) · [Coleções & índices](./colecoes.md).

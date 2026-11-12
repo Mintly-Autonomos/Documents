@@ -1,6 +1,6 @@
 # 🧱 MintlyApi — CRUD genérico
 
-Entidades CRUD-triviais (Person, e a base de Account/Category) reaproveitam **três classes genéricas** em vez de reescrever controller/use-case/repository. Regra de negócio real ganha use-case dedicado; o resto herda.
+Entidades CRUD-triviais (Person, e a base de Account/Category/MenuItem) reaproveitam **três classes genéricas** em vez de reescrever controller/use-case/repository. Regra de negócio real ganha use-case dedicado; o resto herda.
 
 ```
 CrudController<T>  →  CrudUseCase<T>  →  MongodbCrudRepository<T>  →  MongoDB
@@ -48,9 +48,11 @@ CrudController<T>  →  CrudUseCase<T>  →  MongodbCrudRepository<T>  →  Mong
 
 | Domínio | Como usa a base |
 |---|---|
-| **Person** | estende `CrudController` puro — CRUD completo (a rota `/people` tem GET/:id e DELETE) |
-| **Account / Category** | estendem, **sobrescrevem** `findAll` (busca por `name` via regex) e `insert` (regras: saldo=0/isDefault=false; isSystem…), e adicionam use-cases próprios (set-default, inactivate, suggestions) |
-| **Movement** | **não** usa a base — corpos dedicados e tudo transacional (ver [Mapa de domínio](./mapa-de-dominio.md)) |
+| **Person** | estende `CrudController` — CRUD completo (a rota `/people` tem GET/:id e DELETE) + use-cases próprios para a foto de perfil (`/avatar/:username`, `/me/avatar`) |
+| **Account / Category** | estendem, **sobrescrevem** `findAll` (busca por `name` via regex) e `insert` (regras: saldo=0/isDefault=false; isSystem; `dreGroup` padrão…), e adicionam use-cases próprios (set-default, inactivate, suggestions, subcategorias) |
+| **MenuItem** | estende; `insert` preenche status e datas de preço; preço, revisão e alertas têm métodos próprios no controller |
+| **Movement** | **não** usa a base — corpos dedicados e tudo transacional (ver [Movimentações](./movimento.md)) |
+| **Relatórios, assinatura, IA, conta, funcionários** | **não** usam a base — são queries ou use-cases dedicados |
 
 > **Regra:** herde a base quando o recurso é CRUD comum; sobrescreva o método específico quando a regra difere; saia da base quando o fluxo é transacional/RPC (movimento).
 

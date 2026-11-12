@@ -78,7 +78,7 @@ Pode ser automático (no merge, via `workflow_call`) ou manual (`workflow_dispat
 
 ## MongoDB / Atlas
 
-- **Um cluster, um banco por `env`** (`client.db(env)`): `app` (config global: `valid_environments`, `tax_settings`), `staging`, `production`. Ver [Multi-tenant](../api/multi-tenant.md).
+- **Um cluster, um banco por `env`** (`client.db(env)`): `app` (config global: `valid_environments`, `tax_settings`), `staging`, `production`. Ver [Multi-tenant](../base-de-dados/multi-tenant.md).
 - **URI standard (não-SRV)**: `buildMongoUri` monta a URI a partir de campos separados (`MONGODB_HOSTS`, `MONGODB_USER`, `MONGODB_PASSWORD`, `MONGODB_REPLICA_SET`, `MONGODB_AUTH_SOURCE`, `MONGODB_TLS`). O SRV (`mongodb+srv://`) depende de DNS SRV/TXT, que falha em alguns runners/redes. `MONGODB_URI` tem precedência quando definida (testes usam a do `mongodb-memory-server`).
 - **Índices por banco**: `npm run db:indices` cria os índices no banco do `env` — roda no deploy e antes de cada liquidação. Rodar em **cada** env.
 - **Allowlist de env**: `npm run db:seed-envs` insere `staging`/`production` em `app.valid_environments` (ativa a validação C2).

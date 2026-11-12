@@ -1,4 +1,4 @@
-# 🧬 MintlyApi — atributos das coleções
+# 🧬 Base de dados — atributos das coleções
 
 > Cada coleção com o tipo de cada campo e um exemplo de preenchimento. Para papel, escopo e índices, ver [Coleções & índices](./colecoes.md).
 >

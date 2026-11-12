@@ -1,12 +1,136 @@
-# 🗄️ MintlyApi — coleções & índices
+# 🗄️ Base de dados — coleções & índices
 
 Modelagem **NoSQL idiomática**: sem joins — relações "vivas" por id + **Extended Reference** (snapshots embutidos). Cada `env` é um banco; o `app` é global.
 
 > Os **atributos e tipos** de cada coleção estão em [Atributos das coleções](./colecoes-atributos.md).
 
-![Coleções e relações](/Documents/files/diagrams/colecoes-er.svg)
+> Por que cada relação é embutida, referenciada ou Extended Reference: [Modelagem NoSQL](./modelagem-nosql.md). Como evoluir os documentos sem quebrar os antigos: [Migrações e backfills](./migracoes-e-backfills.md).
 
-> O diagrama é de junho e mostra só as coleções do núcleo (usuários, restaurante, contas, categorias, movimentações).
+## Diagrama de relações
+
+Cada linha diz por qual campo a relação acontece; nas Extended References, os campos copiados aparecem entre `{}`. As coleções `valkyrie_*` e as do banco `app` ficam de fora.
+
+```mermaid
+erDiagram
+  restaurants ||--o{ users : "restaurantId"
+  people ||--o| users : "users.person {_id, name}"
+  restaurants ||--o{ financial_accounts : "restaurantId"
+  restaurants ||--o{ financial_categories : "restaurantId"
+  restaurants ||--o{ financial_movements : "restaurantId"
+  restaurants ||--o{ menu_items : "restaurantId"
+  restaurants ||--o{ payments : "restaurantId"
+  restaurants ||--o{ movement_imports : "restaurantId"
+  restaurants ||--o{ ai_usage : "restaurantId (no _id)"
+  restaurants ||--o{ ai_cache : "restaurantId (no _id)"
+  financial_accounts ||--o{ financial_movements : "account {_id, name, type}"
+  financial_categories ||--o{ financial_movements : "category / subcategory"
+  menu_items ||--o{ financial_movements : "items[] {menuItemId, name, qty, unitPrice}"
+  payments }o--|| restaurants : "subscription.lastPaymentId"
+  users ||--o{ audit_logs : "userId"
+  users ||--o{ password_reset_tokens : "userId"
+
+  restaurants {
+    ObjectId _id
+    string name
+    enum taxRegime
+    Date firstAccessAt
+    Date deletionRequestedAt
+    object subscription "endsAt, tier, plan, recurring{}"
+  }
+  people {
+    ObjectId _id
+    string name
+    string phone
+    string avatar
+  }
+  users {
+    ObjectId _id
+    object person "Extended Reference"
+    string email UK
+    string passwordHash
+    enum role "owner | member"
+    enum status
+    string restaurantId FK
+  }
+  financial_accounts {
+    ObjectId _id
+    string restaurantId FK
+    string name
+    enum type "bank | cash | digitalWallet | platform"
+    number feePercent
+    object settlementRule
+    Decimal128 availableBalance
+    Decimal128 predictedBalance
+    bool isDefault
+  }
+  financial_categories {
+    ObjectId _id
+    string restaurantId FK
+    string name
+    enum type "revenue | expense"
+    enum dreGroup
+    array subcategories "embutidas"
+  }
+  financial_movements {
+    ObjectId _id
+    string restaurantId FK
+    enum direction
+    Decimal128 grossValue
+    Decimal128 netValue
+    Date date
+    Date dueDate
+    Date settledAt
+    enum status
+    object account "snapshot"
+    object category "snapshot"
+    array items "snapshot dos pratos"
+  }
+  menu_items {
+    ObjectId _id
+    string restaurantId FK
+    string name
+    number price
+    number cost
+    Date priceReviewedAt
+  }
+  payments {
+    ObjectId _id
+    string restaurantId FK
+    enum provider
+    int amountCents
+    enum status
+    string providerPaymentId UK
+  }
+  movement_imports {
+    ObjectId _id
+    string restaurantId FK
+    string key
+    enum status
+  }
+  ai_usage {
+    string _id "restaurantId:dia"
+    int count
+    Date expireAt
+  }
+  ai_cache {
+    string _id "restaurantId:kind:dia:hash"
+    object payload
+    Date expireAt
+  }
+  audit_logs {
+    ObjectId _id
+    enum event
+    string userId FK
+    string restaurantId FK
+    Date createdAt
+  }
+  password_reset_tokens {
+    ObjectId _id
+    string token "sha256"
+    string userId FK
+    Date expiresAt
+  }
+```
 
 ---
 
@@ -119,6 +243,6 @@ Cada evento guarda `userId`, `restaurantId`, `data` e `createdAt`. Escrita via `
 - `npm run db:seed-envs` — insere `staging`/`production` em `app.valid_environments` (ativa a allowlist, C2).
 - `npm run db:seed-tax-settings` — grava o DAS do MEI vigente em `app.tax_settings`.
 - `npm run db:seed-demo` — restaurante de demonstração.
-- `npm run db:settle` — liquidação automática (ver [Movimentações](./movimento.md)).
+- `npm run db:settle` — liquidação automática (ver [Movimentações](../api/movimento.md)).
 
-Ver também: [Atributos das coleções](./colecoes-atributos.md) · [Multi-tenant](./multi-tenant.md) · [Modelo de dinheiro](./dinheiro.md) · [mintly-lib](../libs/mintly-lib.md).
+Ver também: [Atributos das coleções](./colecoes-atributos.md) · [Multi-tenant](./multi-tenant.md) · [Modelo de dinheiro](../api/dinheiro.md) · [mintly-lib](../libs/mintly-lib.md).

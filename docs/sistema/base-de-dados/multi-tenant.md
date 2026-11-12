@@ -1,4 +1,4 @@
-# 🏢 MintlyApi — modelo multi-tenant
+# 🏢 Base de dados — modelo multi-tenant
 
 O Mintly é **multi-tenant**: um mesmo deploy atende vários restaurantes. O isolamento é **híbrido**, em **dois eixos independentes**:
 
@@ -62,7 +62,7 @@ Além disso, `sanitizeFilter` remove chaves com operadores Mongo (`$gt`, `$where
 
 - **Índices por banco:** criar um índice não o propaga para os outros envs; rodar `db:indices` em cada um.
 - **Coleções globais** do banco `app` — `valid_environments` (allowlist) e `tax_settings` (DAS do MEI vigente) — ficam de fora do `withTenant` por design: são compartilhadas entre envs.
-- **Liquidação automática é cross-tenant de propósito:** o `SettleDueMovementsUseCase` roda fora de request, recebe só o `env` e varre os movimentos de todos os restaurantes numa query. É a única operação sem `restaurantId` no contexto; as escritas continuam filtradas pelo `restaurantId` de cada documento. Ver [Movimentações](./movimento.md).
+- **Liquidação automática é cross-tenant de propósito:** o `SettleDueMovementsUseCase` roda fora de request, recebe só o `env` e varre os movimentos de todos os restaurantes numa query. É a única operação sem `restaurantId` no contexto; as escritas continuam filtradas pelo `restaurantId` de cada documento. Ver [Movimentações](../api/movimento.md).
 - **Coleções `valkyrie_*`** usam `tenantId: "mintly"` fixo: o isolamento da sessão entre ambientes vem do banco, não desse campo.
 
-Ver também: [Arquitetura](./arquitetura.md) · [CRUD genérico](./crud-generico.md) · [Coleções & índices](./colecoes.md).
+Ver também: [Arquitetura](../api/arquitetura.md) · [CRUD genérico](../api/crud-generico.md) · [Coleções & índices](./colecoes.md).

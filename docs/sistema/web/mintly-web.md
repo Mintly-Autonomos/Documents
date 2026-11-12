@@ -90,7 +90,7 @@ CI (`ci.yml`): lint → format:check → typecheck → test:ci → build:ci.
 
 Deploy manual (`deploy.yml`): `staging` → **Vercel**; `production` → **AWS (S3 + CloudFront)**. A `apiUrl` do build vem de `vars.API_URL` quando definida. Ver [Infraestrutura](../infra/infraestrutura.md).
 
-Convenções de git, branches e TDD são as [gerais do projeto](../guias/convencoes.md).
+Convenções de git, branches e TDD são as [gerais do projeto](../guias/convencoes.md). Qual tela chama qual rota: [Mapa telas → clients](./mapa-telas-clients.md). Como subir local: [Setup local](../guias/setup-local.md).
 
 ## Checklist para página nova
 

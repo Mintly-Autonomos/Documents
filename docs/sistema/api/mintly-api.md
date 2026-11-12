@@ -4,7 +4,7 @@
 
 Swagger vivo em `/documentation` (só **fora de produção**).
 
-> **Documentação profunda:** [Arquitetura](./arquitetura.md) · [Mapa de domínio](./mapa-de-dominio.md) · [Multi-tenant](../base-de-dados/multi-tenant.md) · [Modelo de dinheiro](./dinheiro.md) · [Movimentações](./movimento.md) · [Auth & sessão](./auth.md) · [CRUD genérico](./crud-generico.md) · [Coleções & índices](../base-de-dados/colecoes.md) · [Atributos das coleções](../base-de-dados/colecoes-atributos.md) · [Erros & validação](./erros.md) · [Assinatura e pagamentos](./assinatura-e-pagamentos.md) · [Relatórios e métricas](./relatorios-e-metricas.md) · [Perfil tributário](./perfil-tributario.md) · [IA](./ia.md).
+> **Documentação profunda:** [Arquitetura](./arquitetura.md) · [Mapa de domínio](./mapa-de-dominio.md) · [Multi-tenant](../base-de-dados/multi-tenant.md) · [Modelo de dinheiro](./dinheiro.md) · [Movimentações](./movimento.md) · [Auth & sessão](./auth.md) · [CRUD genérico](./crud-generico.md) · [Coleções & índices](../base-de-dados/colecoes.md) · [Atributos das coleções](../base-de-dados/colecoes-atributos.md) · [Erros & validação](./erros.md) · [Assinatura e pagamentos](./assinatura-e-pagamentos.md) · [Relatórios e métricas](./relatorios-e-metricas.md) · [Perfil tributário](./perfil-tributario.md) · [IA](./ia.md) · [Cardápio](./cardapio.md).
 
 ---
 
@@ -193,7 +193,7 @@ Sem a chave do provedor de IA escolhido, as rotas `/ai` respondem **503** e o ap
 - `npm run db:seed-tax-settings` — grava o DAS do MEI vigente em `app.tax_settings` (`MEI_MONTHLY_DAS`, `VALID_FROM=AAAA-MM`).
 - `npm run db:seed-demo` — popula um restaurante de demonstração (`SEED_RESTAURANT_ID`, `SEED_SCENARIO`).
 - `npm run db:backfill-due-date` · `db:backfill-dre-group` — migrações de dados pontuais dos módulos novos.
-- `insomnia-mintly-api.json` (raiz) — collection Insomnia com as rotas.
+- `insomnia/MintlyApi.insomnia_v4.json` — collection Insomnia com as rotas.
 
 ---
 

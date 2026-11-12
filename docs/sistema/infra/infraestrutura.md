@@ -113,4 +113,4 @@ Lista completa na [referência da API](../api/mintly-api.md#variáveis-de-ambien
 
 A **MintlyWeb** (Angular) chama a API pelos clients da lib, mandando em cada request os `Headers`: `env` (seleciona o banco) + `Authorization` (JWT). `env=staging` fala com o deploy da Vercel / banco `staging`; `env=production` com o AWS / banco `production`. O **Mercado Pago** chama a API pelo webhook; a API chama o **Mercado Pago**, o **Gmail** e o provedor de **IA**.
 
-Ver também: [Arquitetura da API](../api/arquitetura.md) · [Processo de release](../guias/processo-de-release.md).
+Ver também: [Runbook](./runbook.md) · [Arquitetura da API](../api/arquitetura.md) · [Processo de release](../guias/processo-de-release.md).

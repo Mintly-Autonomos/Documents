@@ -157,4 +157,4 @@ Peças comuns em `reports/shared/`: `period.ts` (mês e fuso), `cash-date.ts` (`
 - **Auditoria:** `src/app/audit/audit-service.ts` · **Revogação de sessões:** `src/app/auth/session-revocation.ts`
 - **Índices:** `src/infrastructure/db/indices/<coleção>.ts`
 
-> 🔜 O mapa **telas → funções do client** (quem no front chama qual método) fica para a documentação da [MintlyWeb](../web/mintly-web.md).
+> O mapa **telas → funções do client** (quem no front chama qual método) está em [Mapa telas → clients](../web/mapa-telas-clients.md).

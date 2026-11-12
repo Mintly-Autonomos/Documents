@@ -1,6 +1,6 @@
 # 🔐 MintlyApi — auth & sessão
 
-Autenticação por e-mail/senha, sessão com JWT criptografado (valkyrie-jwt), lockout contra brute-force e recuperação de senha por e-mail de uso único.
+Autenticação por e-mail/senha, sessão com JWT criptografado (valkyrie-jwt), lockout contra brute-force, recuperação de senha por e-mail de uso único, gestão da própria conta e dos funcionários do restaurante.
 
 ---
 
@@ -21,7 +21,9 @@ verifyPassword(pwd, stored)  // comparação em tempo constante (timingSafeEqual
 
 ## Signup — onboarding transacional
 
-O cadastro cria **tudo de uma vez** numa transação Mongo: pessoa, restaurante, usuário, a conta "Caixa" padrão, 6 categorias padrão e 4 eventos de auditoria. Se qualquer passo falhar, **nada** é gravado.
+O cadastro cria **tudo de uma vez** numa transação Mongo: pessoa (com foto de perfil opcional), restaurante, usuário (`owner`), a conta "Caixa" padrão, 6 categorias padrão (Venda Balcão, Venda Delivery, CMV/Insumos, Salários, Aluguel, Impostos) e 4 eventos de auditoria. Se qualquer passo falhar, **nada** é gravado.
+
+O restaurante nasce com `firstAccessAt: null` (onboarding pendente) e **sem assinatura**: a resposta já traz `subscription.status = "none"`, e o front leva a pessoa para a tela de assinatura antes do app.
 
 ![Signup — transação](/Documents/files/diagrams/signup-transacao.svg)
 
@@ -50,9 +52,11 @@ sequenceDiagram
     A->>R: resetLoginAttempts + updateLastAccess
     A->>J: generate(claims)
     J-->>A: accessToken (15min) + refreshToken (7d)
-    A-->>C: 200 tokens + user
+    A-->>C: 200 tokens + user (com foto) + estado da assinatura
   end
 ```
+
+Os claims do token são `{ name, email, restaurantId, role, status }`, com `subject` = userId e `tenantId` fixo `"mintly"` (o isolamento entre ambientes vem do banco do `env`).
 
 Pontos-chave:
 
@@ -68,7 +72,7 @@ Envs: `MAX_LOGIN_ATTEMPTS` (5), `BLOCK_DURATION_MINUTES` (15).
 ## Sessão — JWT com rotação
 
 - **valkyrie-jwt**: access token criptografado (AES-256-GCM), **15 min**; refresh token **7 dias** com **rotação** — cada refresh emite um par novo e o refresh antigo é invalidado. Reuso de um refresh já rotacionado é detectado e a família é negada.
-- Os refresh tokens vivem nas coleções `valkyrie_*` (infra da lib).
+- Os refresh tokens vivem em `valkyrie_refresh_tokens`; as chaves de assinatura em `valkyrie_signing_keys`; a trilha técnica de tokens em `valkyrie_audit_events`. Ver [Atributos das coleções](./colecoes-atributos.md).
 
 ### Refresh — reconsulta o usuário (C5)
 
@@ -123,9 +127,11 @@ sequenceDiagram
   P->>T: claim(sha256(token)) — uso único ATÔMICO
   alt token inválido/usado/expirado
     P-->>C: 401
+  else conta não está active
+    P-->>C: 401 (mesma mensagem; o token já foi queimado)
   else ok
     P->>R: updatePassword(hash)
-    P->>T: invalidateAllForUser (revoga sessões/tokens)
+    P->>P: revokeAllSessions(userId) — derruba todos os aparelhos
     P-->>C: 200
   end
 ```
@@ -136,14 +142,47 @@ sequenceDiagram
 
 ---
 
+## Revogação de sessões
+
+`revokeAllSessions(userId, ctx, motivo)` (`app/auth/session-revocation.ts`) revoga todos os refresh tokens ainda válidos do usuário: ninguém renova o acesso, em nenhum aparelho. Os access tokens já emitidos expiram sozinhos em até 15 min. É *best-effort*: falhar aqui não desfaz a operação que pediu a revogação.
+
+| Motivo | Quando |
+|---|---|
+| `password_reset` | reset de senha pelo link do e-mail |
+| `password_changed` | troca de senha logado (`POST /users/me/password`) |
+| `member_updated` | dono inativa um funcionário ou troca a senha dele |
+| `plan_downgrade` | rebaixar para o Básico com mais funcionários ativos que o limite: os excedentes são inativados |
+
+---
+
+## Conta de quem está logado (`/users/me`)
+
+Rotas com login, mas **fora do portão de assinatura**: trocar a senha ou o e-mail precisa funcionar com a assinatura vencida.
+
+- `GET /me` / `PATCH /me` — nome e telefone (atualiza `people` e o `users.person.name` na mesma transação).
+- `PATCH /me/email` e `POST /me/password` — exigem a **senha atual**.
+
+**Confirmação de senha** (`password-confirmation.ts`): usa o **mesmo contador de tentativas do login**, então errar demais bloqueia a conta por alguns minutos (um token roubado não serve para adivinhar a senha). Senha errada responde **403**, não 401: o token está certo, e um 401 faria o app achar que a sessão acabou. Cada erro gera `password_confirmation_failed` em `audit_logs`.
+
+## Funcionários (`/restaurants/me/members`)
+
+O dono cria logins de funcionário (papel `member`) no próprio restaurante, ativa/inativa e define senha nova. O limite de funcionários **ativos** depende do plano: **5 no Básico, 20 no Pro** (o dono não conta; inativar libera a vaga). As rotas exigem `role = owner`.
+
+## Pedido de exclusão (`/restaurants/me/deletion-request`)
+
+O dono pede a exclusão do restaurante confirmando a senha (motivo opcional, gravado em `audit_logs`). Só marca `restaurants.deletionRequestedAt`: nada é apagado até alguém analisar, e o dono pode cancelar com `DELETE`.
+
+---
+
 ## Envelope de erros de auth
 
 | Código | HTTP | Quando |
 |---|---|---|
 | `AUTH-0001` | 401 | credencial/token inválido, sessão inválida |
 | `AUTH-0002` | 409 | conflito (e-mail já cadastrado) |
-| `AUTH-0003` | 403 | conta inativa/bloqueada (após senha correta) |
+| `AUTH-0003` | 403 | conta inativa/bloqueada (após senha correta), senha atual errada, ação só do dono |
 | `AUTH-0004` | 429 | lockout temporário |
+| `SUBSCRIPTION-0001` | 402 | rota do app sem assinatura válida |
 
 Os códigos vêm do glossário único (`error-glossary.ts`), não inline — ver [Erros & validação](./erros.md).
 

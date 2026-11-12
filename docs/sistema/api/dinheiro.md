@@ -29,8 +29,9 @@ decimalToNumber(d) // Decimal128 (ou string/number do banco) → number, na leit
 
 O cálculo de taxa/líquido (`computeFeeNet`, `movement-rules.ts`) roda **em centavos inteiros**, e só então vira `Decimal128`. Regras:
 
-- **Taxa só se aplica a ENTRADA em conta `platform`** (receber via iFood/Rappi desconta a taxa). Saída ou conta não-platform: `feeValue = 0`, `netValue = grossValue`.
-- "Platform" tem **uma fonte de verdade**: `isPlatformAccount(account)` (`type === 'platform'`). O schema (união discriminada) garante que só contas platform têm `feePercent`/`settlementDays` (M7).
+- **Taxa só se aplica a ENTRADA em conta `platform`** (receber via iFood/Keeta/99 desconta a taxa). Saída ou conta não-platform: `feeValue = 0`, `netValue = grossValue`.
+- "Platform" tem **uma fonte de verdade**: `isPlatformAccount(account)` (`type === 'platform'`). O schema (união discriminada) garante que só contas platform têm `feePercent` e regra de repasse (`settlementRule`, ou o antigo `settlementDays`) (M7).
+- **Taxa congelada:** o percentual e a regra aplicados ficam gravados no movimento (`feePercentApplied`, `settlementDaysApplied`/`settlementRuleApplied`). Editar o movimento depois usa esse snapshot, não a taxa atual da conta (P3).
 
 ---
 
@@ -40,8 +41,8 @@ O saldo de uma conta vive em **dois campos** `Decimal128`:
 
 | Bucket | Significado |
 |---|---|
-| `availableBalance` | disponível — já caiu |
-| `predictedBalance` | a receber — vai cair (prazo de liquidação) |
+| `availableBalance` | disponível — já entrou/saiu |
+| `predictedBalance` | previsto — a receber (repasse, fiado) menos a pagar (boleto em aberto) |
 
 O `BalanceImpact` (bucket + delta) decide o efeito de uma movimentação:
 
@@ -51,7 +52,7 @@ O `BalanceImpact` (bucket + delta) decide o efeito de uma movimentação:
 | `pending` | `predictedBalance` | `in → +netValue` · `out → −grossValue` |
 | `cancelled` | — (nenhum) | sem impacto |
 
-Entrada credita o **líquido** (`netValue`); saída debita o **bruto** (`grossValue`).
+Entrada credita o **líquido** (`netValue`); saída debita o **bruto** (`grossValue`). Qualquer movimento com vencimento nasce `pending` — por isso uma saída a prazo (boleto) **reduz** o `predictedBalance` até ser paga.
 
 ---
 
@@ -72,14 +73,23 @@ accounts.updateOne(
 - **register** aplica o impacto (`sign +1`).
 - **update** reverte o efeito antigo (`−1`) na conta antiga e aplica o novo (`+1`) na conta nova — retroativo se resolve sozinho.
 - **changeStatus** reverte o bucket do status antigo e aplica o do novo (ex.: `pending → settled` move de `predicted` para `available`).
+- **settle** (liquidação automática diária) move o repasse vencido de `predicted` para `available`, um movimento por transação.
 - **recompute-balances** recalcula o saldo de uma conta a partir das movimentações (reconciliação).
 
 Tudo dentro de `session.withTransaction(...)`: a movimentação e o ajuste de saldo commitam **juntos ou nada**.
 
 ---
 
-## Limite conhecido (futuro)
+## Outros valores em dinheiro
 
-> ⚠️ **Liquidação por data não existe** (C3 / P1). Um movimento `pending` de conta platform **não migra** automaticamente para `settled` quando o `predictedReceiptDate` vence — fica preso em `predictedBalance`. Falta um settler por data (ou é reconciliação manual, a decidir). Registrado em `PROBLEMAS-FUTUROS.md`.
+| Onde | Representação | Observação |
+|---|---|---|
+| `menu_items.price` / `cost`, `items[].unitPrice` | `number` | preço de cardápio; não entra em saldo |
+| `payments.amountCents` | inteiro em **centavos** | preço da assinatura (`SUBSCRIPTION_MONTHLY_PRICE_CENTS` na lib: Básico R$ 149,90, Pro R$ 229,90/mês; 5%/10%/15% de desconto em 3/6/12 meses) |
+| perfil tributário | `number` + taxas como **fração** (`0.06728` = 6,728%) | calculado na leitura, não gravado |
+
+---
+
+> A liquidação por data, antes registrada aqui como limite conhecido (C3/P1), foi implementada: ver [Movimentações → Liquidação automática](./movimento.md#liquidação-automática-settleyml--npm-run-dbsettle).
 
 Ver também: [Mapa de domínio](./mapa-de-dominio.md) · [Arquitetura](./arquitetura.md).

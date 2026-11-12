@@ -20,20 +20,27 @@ Validação vem com detalhe por campo:
 
 ## Glossário (`error-glossary.ts` — fonte única)
 
-| Código | HTTP | Significado |
-|---|---|---|
-| `AUTH-0001` | 401 | não autenticado / credencial ou token inválido |
-| `AUTH-0002` | 409 | conflito (e-mail já cadastrado) |
-| `AUTH-0003` | 403 | conta inativa ou bloqueada |
-| `AUTH-0004` | 429 | lockout temporário |
-| `APP-0001` | 404 | recurso não encontrado |
-| `APP-0002` | 400 | query kind não suportada |
-| `APP-0003` | 400 | header `env` ausente |
-| `APP-0004` | 400 | `env` fora da allowlist |
-| `VALIDATION_ERROR` | 400 | falha de validação (com `details`) |
-| `INTERNAL_ERROR` | 500 | erro não tratado |
+| Código | HTTP | Classe | Significado |
+|---|---|---|---|
+| `APP-0001` | 404 | `NotFoundError` | recurso não encontrado |
+| `APP-0002` | 400 | `UnsupportedQueryKindError` | query kind não suportada |
+| `APP-0003` | 400 | `MissingEnvError` | header `env` ausente |
+| `APP-0004` | 400 | `InvalidEnvError` | `env` fora da allowlist |
+| `APP-0005` | 400 | `ValidationError` | regra de domínio violada (ex.: `settledAt` no futuro, mês inválido nos relatórios) |
+| `AUTH-0001` | 401 | `UnauthorizedError` | não autenticado / credencial ou token inválido |
+| `AUTH-0002` | 409 | `ConflictError` | conflito (e-mail já cadastrado, duplicidade de movimento, importação em andamento) |
+| `AUTH-0003` | 403 | `ForbiddenError` | conta inativa/bloqueada, senha atual errada, ação só do dono |
+| `AUTH-0004` | 429 | `TooManyRequestsError` | lockout temporário |
+| `SUBSCRIPTION-0001` | 402 | `SubscriptionRequiredError` | sem assinatura válida (o front leva à tela de assinatura) |
+| `AI-0001` | 429 | `AiLimitReachedError` | limite diário de chamadas à IA atingido |
+| `AI-0002` | 503 | `AiUnavailableError` | provedor de IA sem chave ou fora do ar |
+| `AI-0003` | 403 | `AiProOnlyError` | IA é só do plano Pro |
+| `VALIDATION_ERROR` | 400 | — (handler) | falha de schema Fastify ou Sapphire (com `details`) |
+| `INTERNAL_ERROR` | 500 | — (handler) | erro não tratado |
 
-> **Fonte única (M14):** os códigos moram todos no `error-glossary.ts`. Os erros de auth (`UnauthorizedError`, `ConflictError`, …) **referenciam** o glossário (`errorGlossary.unauthorized.code`), não têm o código inline — antes havia duas fontes de verdade.
+> **Fonte única (M14):** os códigos `APP-*`, `AUTH-*` e `SUBSCRIPTION-*` moram no `error-glossary.ts`, e as classes **referenciam** o glossário (`errorGlossary.unauthorized.code`) em vez de ter o código inline. Exceção: os erros da IA (`app/ai/ai-errors.ts`) declaram o código `AI-*` no próprio arquivo.
+>
+> **Dois códigos de validação:** `VALIDATION_ERROR` sai do handler para falhas de *schema*; `APP-0005` sai do `ValidationError`, lançado pelo código quando uma *regra de domínio* falha. O front precisa tratar os dois como erro de dado do usuário.
 
 ---
 
@@ -41,8 +48,9 @@ Validação vem com detalhe por campo:
 
 ```
 BaseError  →  { message, apiMessage, code, statusCode }
-├── auth/    UnauthorizedError · ConflictError · ForbiddenError · TooManyRequestsError
-└── core/    NotFoundError · UnsupportedQueryKindError · MissingEnvError · InvalidEnvError
+├── core/errors/auth/   UnauthorizedError · ConflictError · ForbiddenError · TooManyRequestsError · SubscriptionRequiredError
+├── core/errors/core/   NotFoundError · UnsupportedQueryKindError · MissingEnvError · InvalidEnvError · ValidationError
+└── app/ai/ai-errors    AiLimitReachedError · AiUnavailableError · AiProOnlyError
 ```
 
 Cada erro carrega seu `statusCode`; o `NotFoundError` aceita um `Resource` (ou string) para a mensagem.

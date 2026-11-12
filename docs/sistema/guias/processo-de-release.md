@@ -40,7 +40,7 @@ feature branches ─► PRs ─► staging ─► release/AAAAMMDD ─► PR ─
 
 - [ ] Conferir que os PRs de feature do ciclo estão mergeados em `staging`.
 - [ ] Validar: `npm run test:cov` (cobertura ≥90%) · `npm run typecheck` · `npm run lint` · `npm run validate:swagger`.
-      Recomendado: `node scripts/manual-route-check.mjs` (verificação das rotas contra o servidor real; dropa o banco de teste sozinho).
+      Recomendado: `node scripts/manual-route-check.mjs` (verificação das rotas contra o servidor real; dropa o banco de teste sozinho). ⚠️ Esse script e o `insomnia-mintly-api.json` só existem na `main` (vieram da release 20260610); na `staging` a collection está em `insomnia/MintlyApi.insomnia_v4.json` e o script não foi atualizado para as rotas novas.
 - [ ] `git checkout staging && git pull` → `git checkout -b release/AAAAMMDD`.
 - [ ] Commits exclusivos da release (docs, collections etc.) entram direto na branch.
 - [ ] PR `release/AAAAMMDD` → `main` listando features (com nº das histórias do Jira), validação, dependência da versão da lib, envs novas e observações conhecidas.

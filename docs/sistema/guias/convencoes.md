@@ -83,6 +83,7 @@ Pirâmide com **vitest** na API e na Web (a MintlyLib usa **jest**):
 - Na MintlyLib os specs **não rodam no CI**: rodar `npm test` localmente ao mexer em schema.
 - **TDD**: teste falhando antes da implementação, inclusive em bugfix.
 - O repositório Documents (site Astro) testa as libs puras de `src/lib/`.
+- Detalhes por repositório em [Estratégia de testes](./estrategia-de-testes.md); como subir o ambiente em [Setup local](./setup-local.md).
 
 ---
 

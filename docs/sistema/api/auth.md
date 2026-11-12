@@ -13,7 +13,7 @@ hashPassword(pwd)   // scrypt(pwd, salt16, 64) → "salt:hash" (salt aleatório 
 verifyPassword(pwd, stored)  // comparação em tempo constante (timingSafeEqual)
 ```
 
-- **scrypt** (N-cost alto) com salt de 16 bytes por senha, guardado no formato `salt:hash`.
+- **scrypt** (`scryptSync` com o custo padrão do Node) com salt de 16 bytes por senha e chave de 64 bytes, guardado no formato `salt:hash`. Decisão em [ADR-007](../decisoes/adr-007-senha-scrypt.md).
 - `verifyPassword` compara em **tempo constante** e devolve `false` (não lança) para hash malformado/corrompido — evita 500 no login por dado ruim (B2).
 - Política de senha (≥8, maiúscula, minúscula, número) vem do `passwordSchema` da [mintly-lib](../libs/mintly-lib.md).
 

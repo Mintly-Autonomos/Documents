@@ -131,4 +131,4 @@ O dono pede pelo app. Isso só marca `restaurants.deletionRequestedAt` — nada 
 db.restaurants.find({ deletionRequestedAt: { $ne: null, $exists: true } }, { name: 1, deletionRequestedAt: 1 })
 ```
 
-O motivo informado fica em `audit_logs` (evento `deletion_requested`). A exclusão em si ainda é manual e não tem procedimento definido — ver [Segurança e LGPD](../guias/convencoes.md#segurança-padrões-já-estabelecidos).
+O motivo informado fica em `audit_logs` (evento `deletion_requested`). A exclusão em si ainda é manual e não tem procedimento definido — ver [Segurança e LGPD](../guias/seguranca-e-lgpd.md#o-que-a-política-promete-e-o-que-o-sistema-faz).

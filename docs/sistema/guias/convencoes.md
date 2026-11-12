@@ -66,6 +66,7 @@ feat(auth): contexto multi-tenant populado a partir do JWT (MIN-59)
 - **Webhook de pagamento**: valida a assinatura do aviso e reconsulta o pagamento no provedor antes de liberar acesso; aviso repetido não soma dias duas vezes (índice único em `providerPaymentId`).
 - **Dados enviados à IA** são montados no servidor a partir do token; o cliente não escolhe restaurante nem usuário.
 - **Auditoria**: eventos de acesso e de conta em `audit_logs` com `userId` + `restaurantId`.
+- Inventário de dados pessoais, compartilhamento e LGPD em [Segurança e LGPD](./seguranca-e-lgpd.md); decisões técnicas registradas em [ADRs](../decisoes/README.md); termos em [Glossário](./glossario.md).
 
 ---
 

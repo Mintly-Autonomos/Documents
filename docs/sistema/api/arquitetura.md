@@ -138,4 +138,5 @@ JWT criptografado (AES-256-GCM via valkyrie-jwt), **access token 15 min + refres
 - [Coleções & índices](../base-de-dados/colecoes.md) · [Atributos das coleções](../base-de-dados/colecoes-atributos.md) · [Erros & validação](./erros.md)
 - [Assinatura e pagamentos](./assinatura-e-pagamentos.md) · [Relatórios e métricas](./relatorios-e-metricas.md) · [Perfil tributário](./perfil-tributario.md) · [IA](./ia.md)
 - [Workers](../workers/workers.md) — coleta de dados externos.
+- [Decisões de arquitetura (ADRs)](../decisoes/README.md) — o porquê de cada escolha.
 - [Referência de rotas](./mintly-api.md) — todas as rotas e envelopes.
